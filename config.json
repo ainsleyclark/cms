@@ -1,6 +1,8 @@
 {
   "site": {
-    "url": "http://cms.local"
+    "url": "http://cms.local",
+    "name": "My awesome website",
+    "description": "This is the tits"
   },
   "database": {
     "host": "192.168.10.10",

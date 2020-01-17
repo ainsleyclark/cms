@@ -16,3 +16,5 @@ use App\Helpers;
 Route::get('/', function () {
     return view('BasicTheme.test');
 });
+
+Route::get('/test', 'Controller@test');

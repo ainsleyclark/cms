@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CoreModel;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -28,5 +29,11 @@ class Controller extends BaseController
         ];
 
         return response()->json($response, $status);
+    }
+
+    public function test() {
+        $configmodel = new CoreModel();
+
+        dd($configmodel->getSiteConfig());
     }
 }
