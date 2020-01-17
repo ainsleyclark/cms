@@ -9,6 +9,23 @@ class PagesModel extends Model
 {
 
     /**
+     * Get pages or page from database.
+     *
+     * @param $page
+     * @param int $offset
+     * @param int $limit
+     * @return Model|\Illuminate\Database\Query\Builder|\Illuminate\Support\Collection|object|null
+     */
+    public function getPages($page, $offset = 0, $limit = 999999)
+    {
+        if (page == 'all') {
+            return DB::table('pages')->where('resources', null)->limit($limit)->offset($offset)->get();
+        } else {
+            return DB::table('pages')->where('resources', null)->first();
+        }
+    }
+
+    /**
      * Creates/edit new page into database.
      *
      * @param $data
