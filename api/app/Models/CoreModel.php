@@ -43,5 +43,20 @@ class CoreModel extends Model
         }
     }
 
+    /**
+     *
+     */
+    public function setTheme($theme)
+    {
+        if (!$theme) {
+            return false;
+        }
+
+        $themeInfo = $this->getThemeConfig($theme)->theme;
+
+        //Insert config to DB
+
+    }
+
 
 }

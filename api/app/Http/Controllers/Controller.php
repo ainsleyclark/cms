@@ -12,6 +12,16 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected $coreModel;
+
+    /**
+     * Controller constructor.
+     */
+    public function __construct()
+    {
+        $this->coreModel = new CoreModel();
+    }
+
     /**
      * Ajax Responder
      *
@@ -34,6 +44,6 @@ class Controller extends BaseController
     public function test() {
         $configmodel = new CoreModel();
 
-        dd($configmodel->getSiteConfig());
+        dd($configmodel->setTheme('BasicTheme'));
     }
 }
