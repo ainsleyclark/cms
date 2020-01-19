@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Helpers;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,12 +15,12 @@ class CoreModel extends Model
      */
     public function getSiteConfig()
     {
-        $configPath = Helpers::rootPath() . '/config.json';
+        $configPath = root_path() . '/config.json';
 
         if (file_exists($configPath)) {
             return json_decode(file_get_contents($configPath));
         } else {
-            throw new FileNotFoundException('The config.json file was not found in the root directory.');
+            throw new FileNotFoundException('The config.json file was not found in the root directory. Path:' . $configPath);
         }
     }
 
@@ -32,14 +31,14 @@ class CoreModel extends Model
      * @return mixed
      * @throws FileNotFoundException
      */
-    public function getThemeConfig($theme)
+    public function getThemeConfig()
     {
-        $configPath = Helpers::themePath() . '/' . $theme . '/config.json';
+        $configPath = theme_path() . '/config.json';
 
         if (file_exists($configPath)) {
             return json_decode(file_get_contents($configPath));
         } else {
-            throw new FileNotFoundException('The config.json file was not found in the ' . $theme.  's directory.');
+            throw new FileNotFoundException('The config.json file was not found in the theme\'s directory. Path: ' . $configPath);
         }
     }
 

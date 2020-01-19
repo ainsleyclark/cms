@@ -42,8 +42,8 @@ class Controller extends BaseController
     }
 
     public function test() {
-        $configmodel = new CoreModel();
 
-        dd($configmodel->setTheme('BasicTheme'));
+        dd(theme_path());
+
     }
 }

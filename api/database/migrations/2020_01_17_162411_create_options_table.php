@@ -18,6 +18,14 @@ class CreateOptionsTable extends Migration
             $table->text('option_name');
             $table->text('option_value');
         });
+
+        //Insert initial configuration
+        $initialConfig = [
+            'option_name' => 'active_theme',
+            'option_value' => 'DefaultTheme'
+        ];
+
+        \Illuminate\Support\Facades\DB::table('options')->insert($initialConfig);
     }
 
     /**

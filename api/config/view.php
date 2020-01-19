@@ -15,7 +15,7 @@ return [
 
     'paths' => [
         //resource_path('views'),
-        \App\Helpers::themePath()
+        //\App\Helpers::themePath()
     ],
 
     /*

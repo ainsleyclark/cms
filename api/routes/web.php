@@ -14,7 +14,7 @@ use App\Helpers;
 */
 
 Route::get('/', function () {
-    return view('BasicTheme.test');
+    return view('test');
 });
 
 Route::get('/test', 'Controller@test');
