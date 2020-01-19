@@ -17,10 +17,11 @@ class CreateResourcesTable extends Migration
             $table->bigIncrements('resource_id');
             $table->text('resource_name');
             $table->text('resource_friendly_name');
-            $table->text('resource_categories');
+            $table->text('resource_slug');
+            $table->text('categories');
+            $table->text('theme');
             $table->longText('resource_single_template')->nullable();
             $table->longText('resource_index_template')->nullable();
-            $table->text('resource_slug');
             $table->dateTime('resource_created_at');
             $table->dateTime('resource_updated_at');
         });

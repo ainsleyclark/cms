@@ -26,6 +26,18 @@ if (!function_exists('theme_path')) {
 }
 
 /**
+ * Get themes root path
+ *
+ * @return string
+ */
+if (!function_exists('themes_path')) {
+
+    function themes_path() {
+        return dirname(base_path()) . '/themes/';
+    }
+}
+
+/**
  * Get the admin path
  *
  * @return string

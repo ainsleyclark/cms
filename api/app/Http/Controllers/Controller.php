@@ -43,7 +43,7 @@ class Controller extends BaseController
 
     public function test() {
 
-        dd(theme_path());
+        dd($this->coreModel->setTheme('BasicTheme'));
 
     }
 }

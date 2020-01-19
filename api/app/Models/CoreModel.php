@@ -31,9 +31,9 @@ class CoreModel extends Model
      * @return mixed
      * @throws FileNotFoundException
      */
-    public function getThemeConfig()
+    public function getThemeConfig($theme = false)
     {
-        $configPath = theme_path() . '/config.json';
+        $configPath = $theme ? themes_path() . $theme . '/config.json' : theme_path() . '/config.json';
 
         if (file_exists($configPath)) {
             return json_decode(file_get_contents($configPath));
@@ -42,20 +42,6 @@ class CoreModel extends Model
         }
     }
 
-    /**
-     *
-     */
-    public function setTheme($theme)
-    {
-        if (!$theme) {
-            return false;
-        }
-
-        $themeInfo = $this->getThemeConfig($theme)->theme;
-
-        //Insert config to DB
-
-    }
 
 
 }
