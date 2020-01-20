@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-use App\Helpers;
+use App\Models\Theme;
+use App\Contracts\ThemeContract;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +15,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //dd('hello');
+        $this->app->singleton( ThemeContract::class, function ($app) {
+            return new \App\Models\Theme($app, $this->app['view']->getFinder());
+        });
     }
 
     /**
