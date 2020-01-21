@@ -16,7 +16,6 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected $coreModel;
-    protected $theme;
 
     /**
      * Controller constructor.
@@ -45,8 +44,7 @@ class Controller extends BaseController
         return response()->json($response, $status);
     }
 
-    public function test(ThemeContract $theme) {
+    public function test() {
 
-        dd($theme);
     }
 }

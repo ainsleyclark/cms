@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Theme;
 
 use App\Contracts\ThemeContract;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -12,18 +12,11 @@ class Theme implements ThemeContract
 
 
     protected $themePath;
-    protected $finder;
-    protected $themes;
-    protected $app;
 
-    public function __construct($app, ViewFinderInterface $finder)
+    public function __construct()
     {
-        $this->app = $app;
-        $this->finder = $finder;
-    }
 
-    public function test() {
-        return 'test';
+
     }
 
 

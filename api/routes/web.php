@@ -14,7 +14,7 @@ use App\Helpers;
 */
 
 Route::get('/', function () {
-    return view('test');
+    return view('yey');
 });
 
 Route::get('/test', 'Controller@test');
