@@ -4,5 +4,4 @@ namespace App\Theme;
 
 interface ThemeContract
 {
-
 }

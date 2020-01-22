@@ -161,13 +161,12 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        //App\Providers\ViewServiceProvider::class,
 
 
         /*
          * Package Service Providers...
          */
-        App\Theme\ThemeServiceProvider::class,
+        //App\Theme\ThemeServiceProvider::class,
 
         /*
          * Application Service Providers...
