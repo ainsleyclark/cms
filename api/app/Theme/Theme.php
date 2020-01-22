@@ -15,7 +15,6 @@ class Theme
      * - How to stop bubbling of error throws
      */
 
-
     /**
      * @var
      */
@@ -148,6 +147,7 @@ class Theme
             'option_value' => $theme
         ]);
 
+        //To Do insert to resources
 
     }
 
@@ -158,7 +158,7 @@ class Theme
      * @return mixed
      * @throws ThemeNotFoundException
      */
-    public function getThumb($theme)
+    private function getThumb($theme)
     {
         $path = $this->getPath($theme) . '/thumbnail.*';
         $files = glob($path);

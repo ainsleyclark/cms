@@ -49,9 +49,9 @@ class PagesModel extends Model
 
             if (!$id) {
                 return false;
-            } else {
-                return $id;
             }
+            return $id;
+
         } else {
             DB::table('pages')->where('page_id', $page)->update($insertUpdate);
 
