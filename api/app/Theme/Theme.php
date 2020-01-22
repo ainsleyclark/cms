@@ -10,6 +10,13 @@ class Theme
 {
 
     /**
+     * Ask Kirk
+     * - When to use $this->theme as opposed to passing it via a parameter
+     * - How to stop bubbling of error throws
+     */
+
+
+    /**
      * @var
      */
     protected $theme;
@@ -37,7 +44,7 @@ class Theme
     {
         $this->theme = $this->get();
 
-        $this->themePath = $this->getPath();
+        //$this->themePath = $this->getPath();
 
     }
 
@@ -72,33 +79,18 @@ class Theme
     }
 
     /**
-     *
-     */
-    public function getAll()
-    {
-        $themes = array_diff(scandir(themes_path()), array('.', '..'));
-        $themesConfig = [];
-
-        foreach ($themes as $theme) {
-            array_push($themesConfig, $this->getConfig($theme));
-        }
-
-        return $themesConfig;
-    }
-
-    /**
      * Get the current themes full path.
      *
      * @param $theme
      * @return string
      * @throws ThemeNotFoundException
      */
-    public function getPath()
+    public function getPath($theme)
     {
-        $path = dirname(base_path()) . '/themes/' . $this->theme;
+        $path = dirname(base_path()) . '/themes/' . $theme;
 
         if (!is_dir($path)) {
-            throw new ThemeNotFoundException($this->theme);
+            throw new ThemeNotFoundException($theme);
         }
 
         return $path;
@@ -107,30 +99,77 @@ class Theme
     /**
      * Get the themes configuration file.
      *
+     * @param bool $theme
      * @return mixed
      * @throws ThemeConfigNotFoundException
      * @throws ThemeNotFoundException
      */
     public function getConfig($theme = false)
     {
-        $path = $theme ? $this->getPath($this->theme) . '/config.json' : $this->getPath($theme) . '/config.json';
+        $path = $theme ? $this->getPath($theme) . '/config.json' : $this->getPath($this->theme) . '/config.json';
+        $config = json_decode(file_get_contents($path));
 
         if (!file_exists($path)) {
             throw new ThemeConfigNotFoundException($path);
         }
 
-        return json_decode(file_get_contents($path));
+        return $config;
+    }
+
+    /**
+     * Get all of the themes configuration
+     *
+     * @return array
+     * @throws ThemeConfigNotFoundException
+     * @throws ThemeNotFoundException
+     */
+    public function getAllConfig()
+    {
+        $themes = array_diff(scandir(themes_path()), array('.', '..'));
+        $themesConfig = [];
+
+        foreach ($themes as $theme) {;
+            $themesConfig[$theme] = $this->getConfig($theme)->theme;
+            $themesConfig[$theme]->thumbnail = $this->getThumb($theme);
+        }
+
+        return $themesConfig;
     }
 
     /**
      *
      */
-    public function loadTheme($theme)
+    private function loadTheme($theme)
     {
+        $config = $this->getConfig($theme);
+
         //Update options table with active theme
         DB::table('options')->where('option_value',  'active_theme')->update([
             'option_value' => $theme
         ]);
+
+
+    }
+
+    /**
+     * Get the themes thumbnail.
+     *
+     * @param $theme
+     * @return mixed
+     * @throws ThemeNotFoundException
+     */
+    public function getThumb($theme)
+    {
+        $path = $this->getPath($theme) . '/thumbnail.*';
+        $files = glob($path);
+
+        if (count($files) > 0) {
+            foreach ($files as $file) {
+                 return pathinfo($file);
+            }
+        }
+
+        return false;
     }
 
 }
