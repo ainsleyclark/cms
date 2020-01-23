@@ -2,38 +2,47 @@
 
 namespace App\Theme;
 
+use App\Resource\Resource;
 use Illuminate\Support\Facades\DB;
 use App\Theme\Exceptions\ThemeNotFoundException;
 use App\Theme\Exceptions\ThemeConfigNotFoundException;
 
 class Theme
 {
-
     /**
-     * Ask Kirk
-     * - When to use $this->theme as opposed to passing it via a parameter
-     * - How to stop bubbling of error throws
-     */
-
-    /**
+     * Themes name.
+     *
      * @var
      */
     protected $theme;
 
     /**
+     * Theme absolute path.
+     *
      * @var mixed
      */
     protected $themePath;
 
     /**
+     * Theme config from path.
+     *
      * @var
      */
     protected $themeConfig;
 
     /**
+     * Views path.
+     *
      * @var
      */
     protected $viewPath;
+
+    /**
+     * Resources used for setting theme.
+     *
+     * @var
+     */
+    protected $resource;
 
     /**
      * Theme constructor.
@@ -43,8 +52,13 @@ class Theme
     {
         $this->theme = $this->get();
 
-        //$this->themePath = $this->getPath();
+        $this->themePath = $this->getPath();
 
+        $this->themeConfig = $this->getConfig();
+
+        $this->viewPath = $this->getViewPaths();
+
+        $this->resource = new Resource();
     }
 
     /**
@@ -70,26 +84,31 @@ class Theme
      * Set the current theme.
      *
      * @param $theme
+     * @return bool
      */
     public function set($theme)
     {
+        $theme = $this->setTheme($this->$theme);
 
+        if (!$theme) {
+            return false;
+        }
 
+        return $theme;
     }
 
     /**
      * Get the current themes full path.
      *
-     * @param $theme
      * @return string
      * @throws ThemeNotFoundException
      */
-    public function getPath($theme)
+    public function getPath($theme = false)
     {
-        $path = dirname(base_path()) . '/themes/' . $theme;
+        $path = $theme ? dirname(base_path()) . '/themes/' . $theme : dirname(base_path()) . '/themes/' . $this->theme;
 
         if (!is_dir($path)) {
-            throw new ThemeNotFoundException($theme);
+            throw new ThemeNotFoundException($this->theme);
         }
 
         return $path;
@@ -100,17 +119,18 @@ class Theme
      *
      * @param bool $theme
      * @return mixed
-     * @throws ThemeConfigNotFoundException
      * @throws ThemeNotFoundException
      */
     public function getConfig($theme = false)
     {
-        $path = $theme ? $this->getPath($theme) . '/config.json' : $this->getPath($this->theme) . '/config.json';
+        $path = $theme ? $this->getPath($theme) . '/config.json' : $this->getPath() . '/config.json';
         $config = json_decode(file_get_contents($path));
 
         if (!file_exists($path)) {
-            throw new ThemeConfigNotFoundException($path);
+            abort(500, "Theme file not found");
         }
+
+        $this->themeConfig = $config;
 
         return $config;
     }
@@ -119,7 +139,6 @@ class Theme
      * Get all of the themes configuration
      *
      * @return array
-     * @throws ThemeConfigNotFoundException
      * @throws ThemeNotFoundException
      */
     public function getAllConfig()
@@ -129,16 +148,42 @@ class Theme
 
         foreach ($themes as $theme) {;
             $themesConfig[$theme] = $this->getConfig($theme)->theme;
-            $themesConfig[$theme]->thumbnail = $this->getThumb($theme);
+            $themesConfig[$theme]->thumbnail = $this->getThumb();
         }
 
         return $themesConfig;
     }
 
     /**
+     * Get the view path for theme, if set.
+     *
+     * @return array|bool
+     * @throws ThemeNotFoundException
+     */
+    public function getViewPaths()
+    {
+        $directories = $this->themeConfig->options->view_paths;
+        $paths = [];
+
+        foreach ($directories as $directory) {
+            $path = $this->getPath() . '/' . $directory;
+
+            if (is_dir($path)) {
+                array_push($paths, $path);
+            }
+        }
+
+        if (empty($paths)) {
+            return $this->themePath . '/views';
+        }
+
+        return $paths;
+    }
+
+    /**
      *
      */
-    private function loadTheme($theme)
+    private function setTheme($theme)
     {
         $config = $this->getConfig($theme);
 
@@ -148,19 +193,20 @@ class Theme
         ]);
 
         //To Do insert to resources
+        $resources = $this->resource->store([
+
+        ]);
 
     }
 
     /**
      * Get the themes thumbnail.
      *
-     * @param $theme
-     * @return mixed
-     * @throws ThemeNotFoundException
+     * @return bool|mixed
      */
-    private function getThumb($theme)
+    private function getThumb()
     {
-        $path = $this->getPath($theme) . '/thumbnail.*';
+        $path = $this->themePath . '/thumbnail.*';
         $files = glob($path);
 
         if (count($files) > 0) {

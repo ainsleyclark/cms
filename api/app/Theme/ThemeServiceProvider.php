@@ -2,7 +2,6 @@
 
 namespace App\Theme;
 
-use App\Test;
 use App\Theme\ThemeContract;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,11 +14,9 @@ class ThemeServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
         $this->app->bind('view.finder', function ($app) {
             return new \App\Theme\ThemeViewFinder($app['files'], $app['config']['view.paths'], null);
         });
-
     }
 
     /**

@@ -46,6 +46,6 @@ class Controller extends BaseController
     }
 
     public function test() {
-        dd($this->theme->getAllConfig());
+        dd($this->theme);
     }
 }

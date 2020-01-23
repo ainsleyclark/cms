@@ -15,6 +15,11 @@ $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
 
+//New environment location
+$app->useEnvironmentPath(
+    dirname(base_path())
+);
+
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces
