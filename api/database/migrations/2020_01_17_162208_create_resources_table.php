@@ -20,6 +20,8 @@ class CreateResourcesTable extends Migration
             $table->text('resource_slug');
             $table->text('categories');
             $table->text('theme');
+            $table->string('resource_icon', 40)->nullable();
+            $table->smallInteger('resource_menu_position')->nullable();
             $table->longText('resource_single_template')->nullable();
             $table->longText('resource_index_template')->nullable();
             $table->dateTime('resource_created_at');

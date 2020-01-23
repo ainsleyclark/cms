@@ -59,6 +59,8 @@ class Theme
         $this->viewPath = $this->getViewPaths();
 
         $this->resource = new Resource();
+
+        $this->set();
     }
 
     /**
@@ -86,9 +88,9 @@ class Theme
      * @param $theme
      * @return bool
      */
-    public function set($theme)
+    public function set()
     {
-        $theme = $this->setTheme($this->$theme);
+        $theme = $this->setTheme($this->theme);
 
         if (!$theme) {
             return false;
@@ -130,6 +132,10 @@ class Theme
             abort(500, "Theme file not found");
         }
 
+        if (!isset($config)) {
+            abort(500, "Error in the file " . $path);
+        }
+
         $this->themeConfig = $config;
 
         return $config;
@@ -155,13 +161,19 @@ class Theme
     }
 
     /**
-     * Get the view path for theme, if set.
+     * Get the view path for theme, if set, if not assign default view path.
      *
      * @return array|bool
      * @throws ThemeNotFoundException
      */
     public function getViewPaths()
     {
+        $default = $this->themePath . '/views';
+
+        if (!isset($this->themeConfig->options->view_paths)) {
+            return $default;
+        }
+
         $directories = $this->themeConfig->options->view_paths;
         $paths = [];
 
@@ -174,7 +186,7 @@ class Theme
         }
 
         if (empty($paths)) {
-            return $this->themePath . '/views';
+            return $default;
         }
 
         return $paths;
@@ -192,10 +204,34 @@ class Theme
             'option_value' => $theme
         ]);
 
-        //To Do insert to resources
-        $resources = $this->resource->store([
+        //Need to insert name, author, description and version somewhere, perhaps a theme table?
 
-        ]);
+        //Insert into resources table
+        if (isset($this->themeConfig->resources)) {
+
+            foreach ($this->themeConfig->resources as $resourceName => $resource) {
+
+                $resources = $this->resource->store([
+                    'resource_name' => $resourceName,
+                    'resource_friendly_name' => $resource->name,
+                    //!Come back
+                    //'resource_categories' => $data['categories'],
+                    'resource_single_template' => $resource->templates->single_template,
+                    'resource_index_template' => $resource->templates->index_template,
+                    'resource_slug' => $resource->slug
+                ]);
+
+                //If resource fucks up throw exception else return true
+
+            }
+        }
+
+        //Insert categories
+
+
+
+
+
 
     }
 

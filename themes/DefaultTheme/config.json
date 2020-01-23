@@ -1,30 +1,26 @@
 {
+
   "theme": {
     "name": "Pages TestTheme 2020",
     "author": "Ainsley Clark Development",
     "description": "This is a test description",
     "version": "0.0.1"
   },
-  "options": {
-    "view_paths": [
-      "views",
-      "hello"
-    ]
-  },
+
   "resources": {
-    "knowledgeCentre": {
+    "posts": {
       "name": "Posts",
       "singular_name": "Post",
-      "slug": "knowledge-centre",
+      "slug": "blog",
+      "templates": {
+        "single_template": "blog-single",
+        "index_template": "blog-archive"
+      },
       "options": {
-        "single_templates": [
-          "knowledgeCentreSingle"
-        ],
-        "index_templates": [
-          "knowledgeCentreIndex"
-        ],
-        "icon": "fa-brain"
+        "icon": "fa-brain",
+        "menu_position": 4
       }
     }
   }
+
 }
