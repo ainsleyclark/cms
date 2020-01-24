@@ -14,12 +14,11 @@ class CreateFieldsTable extends Migration
     public function up()
     {
         Schema::create('fields', function (Blueprint $table) {
-            $table->bigIncrements('field_id');
-            $table->string('field_name');
-            $table->string('field_description')->nullable();
-            $table->text('field_blocks');
-            $table->dateTime('field_created_at');
-            $table->dateTime('field_updated_at');
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('description')->nullable();
+            $table->text('blocks');
+            $table->timestamps();
         });
     }
 

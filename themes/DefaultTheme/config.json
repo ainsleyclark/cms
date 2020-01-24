@@ -7,6 +7,13 @@
     "version": "0.0.1"
   },
 
+  "options": {
+    "view_paths": [
+      "views",
+      "hello"
+    ]
+  },
+
   "resources": {
     "posts": {
       "name": "Posts",
@@ -21,6 +28,16 @@
         "menu_position": 4
       }
     }
-  }
+  },
 
+  "categories": {
+    "types": {
+      "name": "Types",
+      "singular_name": "Type",
+      "slug": "type",
+      "resources": [
+        "posts"
+      ]
+    }
+  }
 }

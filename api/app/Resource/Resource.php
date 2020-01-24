@@ -38,7 +38,7 @@ class Resource
     }
 
 
-    public function store($data)
+    public function store($data, $page)
     {
 
         $insertUpdate = [

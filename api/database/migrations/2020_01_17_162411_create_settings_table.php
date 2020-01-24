@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOptionsTable extends Migration
+class CreateSettingsTable  extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,19 @@ class CreateOptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('options', function (Blueprint $table) {
-            $table->bigIncrements('option_id');
-            $table->text('option_name');
-            $table->text('option_value');
+        Schema::create('settings', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->text('name');
+            $table->text('value')->nullable();
         });
 
         //Insert initial configuration
         $initialConfig = [
-            'option_name' => 'active_theme',
-            'option_value' => 'DefaultTheme'
+            ['name' => 'theme_active', 'value' => 'DefaultTheme'],
+            ['name' => 'theme_config', 'value' => null]
         ];
 
-        \Illuminate\Support\Facades\DB::table('options')->insert($initialConfig);
+        \Illuminate\Support\Facades\DB::table('settings')->insert($initialConfig);
     }
 
     /**

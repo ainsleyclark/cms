@@ -35,12 +35,12 @@ class PagesModel extends Model
     public function createEditPage($data, $page)
     {
         $insertUpdate = [
-            'page_slug' => $data['slug'],
-            'page_status' => $data['status'],
-            'page_author' => $data['author'],
-            'page_template' => $data['template'],
-            'page_cacheable' => $data['cacheable'],
-            'page_updated_at' => Carbon::now()->toDateTimeString(),
+            'slug' => $data['slug'],
+            'status' => $data['status'],
+            'author' => $data['author'],
+            'template' => $data['template'],
+            'cacheable' => $data['cacheable'],
+            'updated_at' => Carbon::now()->toDateTimeString(),
         ];
 
         if ($page == 'new') {
@@ -67,8 +67,8 @@ class PagesModel extends Model
      */
     public function deletePage($page)
     {
-        if (DB::table('pages')->where('page_id', $page)) {
-            DB::table('pages')->where('page_id', $page)->delete();
+        if (DB::table('pages')->where('id', $page)) {
+            DB::table('pages')->where('id', $page)->delete();
             return true;
         } else {
             return false;

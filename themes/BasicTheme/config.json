@@ -34,6 +34,7 @@
     "types": {
       "name": "Types",
       "singular_name": "Type",
+      "slug": "type",
       "resources": [
         "posts"
       ]

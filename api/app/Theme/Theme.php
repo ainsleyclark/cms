@@ -56,6 +56,8 @@ class Theme
 
         $this->themeConfig = $this->getConfig();
 
+        $this->check();
+
         $this->viewPath = $this->getViewPaths();
 
         $this->resource = new Resource();
@@ -71,9 +73,9 @@ class Theme
      */
     public function get()
     {
-        $theme = DB::table('options')
-            ->where('option_name',  'active_theme')
-            ->value('option_value');
+        $theme = DB::table('settings')
+            ->where('name',  'theme_active')
+            ->value('value');
 
         if (!$theme) {
             throw new ThemeNotFoundException($this->theme);
@@ -97,6 +99,25 @@ class Theme
         }
 
         return $theme;
+    }
+
+    /**
+     * Checks if the current theme configuration file is the same as the one stored in the databsae.
+     *
+     * @return bool
+     */
+    public function check()
+    {
+        $existingThemeConfig = DB::table('settings')
+            ->where('name', 'theme_config')
+            ->value('value');
+        $existingThemeConfig = unserialize($existingThemeConfig);
+
+        if ($existingThemeConfig != $this->themeConfig) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -199,10 +220,16 @@ class Theme
     {
         $config = $this->getConfig($theme);
 
-        //Update options table with active theme
-        DB::table('options')->where('option_value',  'active_theme')->update([
-            'option_value' => $theme
+        //Update active theme
+        DB::table('settings')->where('name',  'theme_active')->update([
+            'value' => $theme
         ]);
+
+        //Update theme config
+        DB::table('settings')->where('name', 'theme_config')->update([
+            'value' => serialize($this->themeConfig)
+        ]);
+
 
         //Need to insert name, author, description and version somewhere, perhaps a theme table?
 
@@ -211,15 +238,17 @@ class Theme
 
             foreach ($this->themeConfig->resources as $resourceName => $resource) {
 
-                $resources = $this->resource->store([
-                    'resource_name' => $resourceName,
-                    'resource_friendly_name' => $resource->name,
-                    //!Come back
-                    //'resource_categories' => $data['categories'],
-                    'resource_single_template' => $resource->templates->single_template,
-                    'resource_index_template' => $resource->templates->index_template,
-                    'resource_slug' => $resource->slug
-                ]);
+//                $resources = $this->resource->store([
+//                    'name' => $resourceName,
+//                    'friendly_name' => $resource->name,
+//                    'slug' => $resource->slug,
+//                    //'resource_categories' => $data['categories'],
+//                    'theme' => $this->theme,
+//                    'icon' => $resource->icon,
+//                    'menu_position' => $resource->menu_position,
+//                    'resource_single_template' => $resource->templates->single_template,
+//                    'resource_index_template' => $resource->templates->index_template,
+//                ], "new");
 
                 //If resource fucks up throw exception else return true
 

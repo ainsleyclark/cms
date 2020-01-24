@@ -13,16 +13,10 @@ class RolesSeeder extends Seeder
     {
         DB::table('roles')->insert([
             [
-                'role_name' => 'Admin',
-                'role_description' => 'DefaultTheme'
-                //'role_created_at'
+                'name' => 'Admin',
+                'description' => 'DefaultTheme'
             ],
         ]);
     }
 
-//$table->bigIncrements('role_id');
-//$table->string('role_name');
-//$table->string('role_description')->nullable();
-//$table->dateTime('role_created_at');
-//$table->dateTime('role_updated_at');
 }
