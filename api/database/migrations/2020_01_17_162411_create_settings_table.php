@@ -18,14 +18,6 @@ class CreateSettingsTable  extends Migration
             $table->text('name');
             $table->text('value')->nullable();
         });
-
-        //Insert initial configuration
-        $initialConfig = [
-            ['name' => 'theme_active', 'value' => 'DefaultTheme'],
-            ['name' => 'theme_config', 'value' => null]
-        ];
-
-        \Illuminate\Support\Facades\DB::table('settings')->insert($initialConfig);
     }
 
     /**

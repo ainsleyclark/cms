@@ -16,7 +16,7 @@
 
   "resources": {
     "posts": {
-      "name": "Posts",
+      "name": "",
       "singular_name": "Post",
       "slug": "blog",
       "templates": {

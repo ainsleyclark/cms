@@ -62,6 +62,9 @@ class Theme
 
         $this->resource = new Resource();
 
+//        if (!$this->check()) {
+//            $this->set();
+//        }
         $this->set();
     }
 
@@ -87,7 +90,6 @@ class Theme
     /**
      * Set the current theme.
      *
-     * @param $theme
      * @return bool
      */
     public function set()
@@ -106,14 +108,14 @@ class Theme
      *
      * @return bool
      */
-    public function check()
+    private function check()
     {
         $existingThemeConfig = DB::table('settings')
             ->where('name', 'theme_config')
             ->value('value');
         $existingThemeConfig = unserialize($existingThemeConfig);
 
-        if ($existingThemeConfig != $this->themeConfig) {
+        if ($existingThemeConfig != $this->themeConfig || !isset($existingThemeConfig)) {
             return false;
         }
 
@@ -220,35 +222,27 @@ class Theme
     {
         $config = $this->getConfig($theme);
 
-        //Update active theme
-        DB::table('settings')->where('name',  'theme_active')->update([
-            'value' => $theme
-        ]);
-
-        //Update theme config
-        DB::table('settings')->where('name', 'theme_config')->update([
-            'value' => serialize($this->themeConfig)
-        ]);
-
-
-        //Need to insert name, author, description and version somewhere, perhaps a theme table?
+        //Update active theme & config
+        $settingsTable = DB::table('settings');
+        $settingsTable->where('name',  'theme_active')->update(['value' => $theme]);
+        $settingsTable->where('name', 'theme_config')->update(['value' => serialize($this->themeConfig)]);
 
         //Insert into resources table
         if (isset($this->themeConfig->resources)) {
 
             foreach ($this->themeConfig->resources as $resourceName => $resource) {
 
-//                $resources = $this->resource->store([
-//                    'name' => $resourceName,
-//                    'friendly_name' => $resource->name,
-//                    'slug' => $resource->slug,
-//                    //'resource_categories' => $data['categories'],
-//                    'theme' => $this->theme,
-//                    'icon' => $resource->icon,
-//                    'menu_position' => $resource->menu_position,
-//                    'resource_single_template' => $resource->templates->single_template,
-//                    'resource_index_template' => $resource->templates->index_template,
-//                ], "new");
+                $resources = $this->resource->store([
+                    'name' => $resourceName,
+                    'friendly_name' => $resource->name,
+                    'slug' => $resource->slug,
+                    //'resource_categories' => $data['categories'],
+                    'theme' => $this->theme,
+                    'icon' => $resource->options->icon,
+                    'menu_position' => $resource->options->menu_position,
+                    'single_template' => $resource->templates->single_template,
+                    'index_template' => $resource->templates->index_template,
+                ], "new");
 
                 //If resource fucks up throw exception else return true
 

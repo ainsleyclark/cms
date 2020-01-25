@@ -2,16 +2,30 @@
 
 namespace App\Resource;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
-class Resource
+class Resource extends Model
 {
+
+    /**
+     * Validator messages for resource
+     *
+     * @var
+     */
+    private $validatorMessages;
 
     /**
      * Resource constructor.
      */
     public function __construct()
     {
+        $this->validatorMessages = [
+            'name.required' => 'We need to know your e-mail address!',
+            'friendly_name.required' => 'We need to know your e-mail address!'
+        ];
     }
 
     /**
@@ -41,16 +55,31 @@ class Resource
     public function store($data, $page)
     {
 
+        $validator = Validator::make($data, [
+            'name' => 'required',
+            'friendly_name' => 'required',
+            'theme' => 'required',
+        ], $this->validatorMessages);
+
+        if ($validator->fails()) {
+            dd($validator->errors()->messages());
+        }
+
+
         $insertUpdate = [
-            'resource_name' => $data['name'],
-            'resource_friendly_name' => $data['friendly_name'],
-            //!Come back
+            'name' => $data['name'],
+            'friendly_name' => $data['friendly_name'],
+            'slug' => $data['slug'],
             //'resource_categories' => $data['categories'],
-            'resource_single_template' => $data['single_template'],
-            'resource_index_template' => $data['index_template'],
-            'resource_slug' => $data['slug'],
-            'resource_updated_at' => Carbon::now()->toDateTimeString(),
+            'theme' => $data['theme'],
+            'icon' => $data['icon'],
+            'menu_position' => $data['menu_position'],
+            'single_template' => $data['single_template'],
+            'index_template' => $data['index_template'],
+            'updated_at' => Carbon::now()->toDateTimeString(),
         ];
+
+        dd($insertUpdate);
 
         if ($page == 'new') {
             $insertUpdate['created_at'] = Carbon::now()->toDateTimeString();
