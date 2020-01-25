@@ -11,7 +11,14 @@ class Resource extends Model
 {
 
     /**
-     * Validator messages for resource
+     * The array of validation rules.
+     *
+     * @var
+     */
+    private $validator;
+
+    /**
+     *  The array of validator messages for resource.
      *
      * @var
      */
@@ -22,6 +29,14 @@ class Resource extends Model
      */
     public function __construct()
     {
+        parent::__construct();
+
+        $this->validator = [
+            'name' => 'required',
+            'friendly_name' => 'required',
+            'theme' => 'required',
+        ];
+
         $this->validatorMessages = [
             'name.required' => 'We need to know your e-mail address!',
             'friendly_name.required' => 'We need to know your e-mail address!'
@@ -51,15 +66,14 @@ class Resource extends Model
         return $resource;
     }
 
-
+    /**
+     * @param $data
+     * @param $page
+     * @return bool|int
+     */
     public function store($data, $page)
     {
-
-        $validator = Validator::make($data, [
-            'name' => 'required',
-            'friendly_name' => 'required',
-            'theme' => 'required',
-        ], $this->validatorMessages);
+        $validator = Validator::make($data, $this->validator, $this->validatorMessages);
 
         if ($validator->fails()) {
             dd($validator->errors()->messages());
