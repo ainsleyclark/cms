@@ -229,12 +229,12 @@ class Theme
 
         //Insert into resources table
         if (isset($this->themeConfig->resources)) {
-
             foreach ($this->themeConfig->resources as $resourceName => $resource) {
 
-                $resources = $this->resource->store([
+                $data = [
                     'name' => $resourceName,
                     'friendly_name' => $resource->name,
+                    'singular_name' => $resource->singular_name,
                     'slug' => $resource->slug,
                     //'resource_categories' => $data['categories'],
                     'theme' => $this->theme,
@@ -242,14 +242,19 @@ class Theme
                     'menu_position' => $resource->options->menu_position,
                     'single_template' => $resource->templates->single_template,
                     'index_template' => $resource->templates->index_template,
-                ], "new");
+                ];
 
-                //If resource fucks up throw exception else return true
-
+                if ($this->resource->getByName($resourceName, $this->theme)) {
+                    $this->resource->store($data, $resourceName);
+                } else {
+                    $this->resource->store($data);
+                }
             }
         }
 
-        //Insert categories
+        dd($this->resource->get()->toArray()[0]);
+
+        //Insert intro categories table
 
 
 

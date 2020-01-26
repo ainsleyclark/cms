@@ -15,10 +15,11 @@ class CreateResourcesTable extends Migration
     {
         Schema::create('resources', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->text('name');
+            $table->string('name')->unique();
+            $table->text('singular_name');
             $table->text('friendly_name');
-            $table->text('slug');
-            $table->text('categories');
+            $table->string('slug')->unique();
+            //$table->text('categories');
             $table->text('theme');
             $table->string('icon', 40)->nullable();
             $table->smallInteger('menu_position')->nullable();

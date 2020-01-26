@@ -9,14 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class Resource extends Model
 {
-
-    /**
-     * The array of validation rules.
-     *
-     * @var
-     */
-    private $validator;
-
     /**
      *  The array of validator messages for resource.
      *
@@ -30,12 +22,6 @@ class Resource extends Model
     public function __construct()
     {
         parent::__construct();
-
-        $this->validator = [
-            'name' => 'required',
-            'friendly_name' => 'required',
-            'theme' => 'required',
-        ];
 
         $this->validatorMessages = [
             'name.required' => 'We need to know your e-mail address!',
@@ -67,48 +53,99 @@ class Resource extends Model
     }
 
     /**
-     * @param $data
-     * @param $page
-     * @return bool|int
+     * Get resource by name.
+     *
+     * @param $name
+     * @return bool|Model|\Illuminate\Database\Query\Builder|object|null
      */
-    public function store($data, $page)
+    public function getByName($name, $theme)
     {
-        $validator = Validator::make($data, $this->validator, $this->validatorMessages);
+        $resource = DB::table('resources')
+            ->where('name', $name)
+            ->where('theme', $theme)
+            ->first();
 
-        if ($validator->fails()) {
-            dd($validator->errors()->messages());
+        if (!$resource) {
+            return false;
         }
 
+        return $resource;
+    }
 
-        $insertUpdate = [
-            'name' => $data['name'],
-            'friendly_name' => $data['friendly_name'],
-            'slug' => $data['slug'],
-            //'resource_categories' => $data['categories'],
-            'theme' => $data['theme'],
-            'icon' => $data['icon'],
-            'menu_position' => $data['menu_position'],
-            'single_template' => $data['single_template'],
-            'index_template' => $data['index_template'],
-            'updated_at' => Carbon::now()->toDateTimeString(),
+    /**
+     * @param $data
+     * @param bool $resource
+     * @return bool
+     */
+    public function store($data, $resource = false)
+    {
+        $rules = [
+            'name' => 'required|unique:resources,name',
+            'friendly_name' => 'required',
+            'slug' => 'unique:resources,slug',
+            'theme' => 'required',
         ];
 
-        dd($insertUpdate);
+        $data['updated_at'] = Carbon::now()->toDateTimeString();
+        $data['slug'] = $data['slug'] != '' ? $data['slug'] : $this->slugify($data['name']);
 
-        if ($page == 'new') {
-            $insertUpdate['created_at'] = Carbon::now()->toDateTimeString();
-            $id = DB::table('pages')->insertGetId($insertUpdate);
+        //Update
+        if ($resource) {
 
-            if (!$id) {
-                return false;
+            $resourceId = $this->getByName($resource, $data['theme'])->id;
+
+            $rules['name'] = 'required|unique:resources,name,' . $resourceId;
+            $rules['slug'] = 'unique:resources,slug,' . $resourceId;
+
+            $validator = Validator::make($data, $rules);
+
+            if ($validator->fails()) {
+                dd($validator->errors()->messages());
             }
-            return $id;
 
+            if (DB::table('resources')->where('name', $data['name'])->update($data)) {
+                return true;
+            }
+
+            return false;
+
+        //Create
         } else {
-            DB::table('pages')->where('page_id', $page)->update($insertUpdate);
 
-            return $page;
+            $validator = Validator::make($data, $rules);
+
+            if ($validator->fails()) {
+                dd($validator->errors()->messages());
+            }
+
+            $insertUpdate['created_at'] = Carbon::now()->toDateTimeString();
+
+            if (DB::table('resources')->where('name', $data['name'])->insert($data)) {
+                return true;
+            }
+
+            return false;
         }
     }
 
+    /**
+     * Slugifies the given input
+     *
+     * @param $text
+     * @return bool|false|string|string[]|null
+     */
+    private function slugify($text){
+        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
+        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+        $text = preg_replace('~[^-\w]+~', '', $text);
+        $text = trim($text, '-');
+        $text = preg_replace('~-+~', '-', $text);
+        $text = strtolower($text);
+
+        if (empty($text)) {
+            return 'n-a';
+        }
+
+        return $text;
+    }
 }

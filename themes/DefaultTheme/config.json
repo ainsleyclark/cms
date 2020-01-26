@@ -16,8 +16,21 @@
 
   "resources": {
     "posts": {
-      "name": "",
+      "name": "Posts",
       "singular_name": "Post",
+      "slug": "blog",
+      "templates": {
+        "single_template": "blog-single",
+        "index_template": "blog-archive"
+      },
+      "options": {
+        "icon": "fa-brain",
+        "menu_position": 4
+      }
+    },
+    "news": {
+      "name": "News",
+      "singular_name": "News Article",
       "slug": "blog",
       "templates": {
         "single_template": "blog-single",
