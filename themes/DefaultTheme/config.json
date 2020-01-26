@@ -31,7 +31,7 @@
     "news": {
       "name": "News",
       "singular_name": "News Article",
-      "slug": "blog",
+      "slug": "news",
       "templates": {
         "single_template": "blog-single",
         "index_template": "blog-archive"

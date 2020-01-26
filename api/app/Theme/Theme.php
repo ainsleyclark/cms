@@ -3,6 +3,7 @@
 namespace App\Theme;
 
 use App\Resource\Resource;
+use App\Theme\Exceptions\ThemeConfigException;
 use Illuminate\Support\Facades\DB;
 use App\Theme\Exceptions\ThemeNotFoundException;
 use App\Theme\Exceptions\ThemeConfigNotFoundException;
@@ -46,6 +47,8 @@ class Theme
 
     /**
      * Theme constructor.
+     *
+     * @throws ThemeConfigException
      * @throws ThemeNotFoundException
      */
     public function __construct()
@@ -90,7 +93,9 @@ class Theme
     /**
      * Set the current theme.
      *
-     * @return bool
+     * @return bool|void
+     * @throws ThemeConfigException
+     * @throws ThemeNotFoundException
      */
     public function set()
     {
@@ -216,51 +221,64 @@ class Theme
     }
 
     /**
+     * Sets the theme, updates theme configuration file as well as
+     * inserting and updating the categories and resources
+     * table.
      *
+     * @param $theme
+     * @throws ThemeConfigException
+     * @throws ThemeNotFoundException
      */
     private function setTheme($theme)
     {
         $config = $this->getConfig($theme);
 
-        //Update active theme & config
-        $settingsTable = DB::table('settings');
-        $settingsTable->where('name',  'theme_active')->update(['value' => $theme]);
-        $settingsTable->where('name', 'theme_config')->update(['value' => serialize($this->themeConfig)]);
-
         //Insert into resources table
         if (isset($this->themeConfig->resources)) {
             foreach ($this->themeConfig->resources as $resourceName => $resource) {
 
-                $data = [
-                    'name' => $resourceName,
-                    'friendly_name' => $resource->name,
-                    'singular_name' => $resource->singular_name,
-                    'slug' => $resource->slug,
-                    //'resource_categories' => $data['categories'],
-                    'theme' => $this->theme,
-                    'icon' => $resource->options->icon,
-                    'menu_position' => $resource->options->menu_position,
-                    'single_template' => $resource->templates->single_template,
-                    'index_template' => $resource->templates->index_template,
-                ];
+                try {
+                    $data = [
+                        'name' => $resourceName,
+                        'friendly_name' => $resource->name,
+                        'singular_name' => $resource->singular_name,
+                        'slug' => $resource->slug,
+                        //'resource_categories' => $data['categories'],
+                        'theme' => $this->theme,
+                        'icon' => $resource->options->icon,
+                        'menu_position' => $resource->options->menu_position,
+                        'single_template' => $resource->templates->single_template,
+                        'index_template' => $resource->templates->index_template,
+                    ];
 
-                if ($this->resource->getByName($resourceName, $this->theme)) {
-                    $this->resource->store($data, $resourceName);
-                } else {
-                    $this->resource->store($data);
+                    if ($this->resource->getByName($resourceName, $this->theme)) {
+                        $this->resource->store($data, $resourceName);
+                    } else {
+                        $this->resource->store($data);
+                    }
+
+                } catch (ThemeConfigException $e) {
+                    throw $e;
                 }
             }
         }
 
-        dd($this->resource->get()->toArray()[0]);
+        //Insert into categories table
+        if (isset($this->themeConfig->categories)) {
+            foreach ($this->themeConfig->categories as $categoryName => $category) {
 
-        //Insert intro categories table
+                try {
+                    dump('to do ');
+                } catch (ThemeConfigException $e) {
+                    throw $e;
+                }
+            }
+        }
 
-
-
-
-
-
+        //Update active theme & config
+        $settingsTable = DB::table('settings');
+        $settingsTable->where('name',  'theme_active')->update(['value' => $theme]);
+        $settingsTable->where('name', 'theme_config')->update(['value' => serialize($this->themeConfig)]);
     }
 
     /**

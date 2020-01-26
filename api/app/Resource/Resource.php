@@ -2,10 +2,11 @@
 
 namespace App\Resource;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
+use App\Theme\Exceptions\ThemeConfigException;
 
 class Resource extends Model
 {
@@ -24,8 +25,9 @@ class Resource extends Model
         parent::__construct();
 
         $this->validatorMessages = [
-            'name.required' => 'We need to know your e-mail address!',
-            'friendly_name.required' => 'We need to know your e-mail address!'
+            'required' => 'A :attribute name must be defined.',
+            'name.unique' => 'The name \':input\' has already been defined.',
+            'slug.unique' => 'The slug \':input\' has already been defined.',
         ];
     }
 
@@ -76,6 +78,7 @@ class Resource extends Model
      * @param $data
      * @param bool $resource
      * @return bool
+     * @throws ThemeConfigException
      */
     public function store($data, $resource = false)
     {
@@ -97,10 +100,11 @@ class Resource extends Model
             $rules['name'] = 'required|unique:resources,name,' . $resourceId;
             $rules['slug'] = 'unique:resources,slug,' . $resourceId;
 
-            $validator = Validator::make($data, $rules);
+            $validator = Validator::make($data, $rules, $this->validatorMessages);
 
             if ($validator->fails()) {
-                dd($validator->errors()->messages());
+                dd($validator->errors()->first());
+                throw new ThemeConfigException($validator->errors()->first(), $data['theme']);
             }
 
             if (DB::table('resources')->where('name', $data['name'])->update($data)) {
@@ -112,10 +116,10 @@ class Resource extends Model
         //Create
         } else {
 
-            $validator = Validator::make($data, $rules);
+            $validator = Validator::make($data, $rules, $this->validatorMessages);
 
             if ($validator->fails()) {
-                dd($validator->errors()->messages());
+                throw new ThemeConfigException($validator->errors()->first(), $data['theme']);
             }
 
             $insertUpdate['created_at'] = Carbon::now()->toDateTimeString();
