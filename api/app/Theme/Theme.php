@@ -49,6 +49,7 @@ class Theme
      * Theme constructor.
      *
      * @throws ThemeConfigException
+     * @throws ThemeConfigNotFoundException
      * @throws ThemeNotFoundException
      */
     public function __construct()
@@ -149,6 +150,8 @@ class Theme
      *
      * @param bool $theme
      * @return mixed
+     * @throws ThemeConfigException
+     * @throws ThemeConfigNotFoundException
      * @throws ThemeNotFoundException
      */
     public function getConfig($theme = false)
@@ -157,11 +160,11 @@ class Theme
         $config = json_decode(file_get_contents($path));
 
         if (!file_exists($path)) {
-            abort(500, "Theme file not found");
+            throw new ThemeConfigNotFoundException('Theme file not found');
         }
 
         if (!isset($config)) {
-            abort(500, "Error in the file " . $path);
+            throw new ThemeConfigException('Syntax error, please review JSON file.', $this->theme);
         }
 
         $this->themeConfig = $config;
@@ -173,6 +176,8 @@ class Theme
      * Get all of the themes configuration
      *
      * @return array
+     * @throws ThemeConfigException
+     * @throws ThemeConfigNotFoundException
      * @throws ThemeNotFoundException
      */
     public function getAllConfig()
@@ -227,6 +232,7 @@ class Theme
      *
      * @param $theme
      * @throws ThemeConfigException
+     * @throws ThemeConfigNotFoundException
      * @throws ThemeNotFoundException
      */
     private function setTheme($theme)
@@ -258,22 +264,23 @@ class Theme
                     }
 
                 } catch (ThemeConfigException $e) {
-                    throw $e;
+                    //dump('in');
+                    dd($e);
                 }
             }
         }
 
         //Insert into categories table
-        if (isset($this->themeConfig->categories)) {
-            foreach ($this->themeConfig->categories as $categoryName => $category) {
-
-                try {
-                    dump('to do ');
-                } catch (ThemeConfigException $e) {
-                    throw $e;
-                }
-            }
-        }
+//        if (isset($this->themeConfig->categories)) {
+//            foreach ($this->themeConfig->categories as $categoryName => $category) {
+//
+//                try {
+//                    dump('to do ');
+//                } catch (ThemeConfigException $e) {
+//                    throw $e;
+//                }
+//            }
+//        }
 
         //Update active theme & config
         $settingsTable = DB::table('settings');

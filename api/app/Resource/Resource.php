@@ -82,6 +82,10 @@ class Resource extends Model
      */
     public function store($data, $resource = false)
     {
+
+        //If names are duplicates throw error getting logic error with it being comapred currently.
+
+
         $rules = [
             'name' => 'required|unique:resources,name',
             'friendly_name' => 'required',
@@ -100,10 +104,12 @@ class Resource extends Model
             $rules['name'] = 'required|unique:resources,name,' . $resourceId;
             $rules['slug'] = 'unique:resources,slug,' . $resourceId;
 
+            dump($resourceId);
+            dump($data);
+
             $validator = Validator::make($data, $rules, $this->validatorMessages);
 
             if ($validator->fails()) {
-                dd($validator->errors()->first());
                 throw new ThemeConfigException($validator->errors()->first(), $data['theme']);
             }
 

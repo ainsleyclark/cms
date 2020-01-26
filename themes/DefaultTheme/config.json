@@ -28,8 +28,8 @@
         "menu_position": 4
       }
     },
-    "news": {
-      "name": "News",
+    "posts": {
+      "name": "Posts",
       "singular_name": "News Article",
       "slug": "news",
       "templates": {
