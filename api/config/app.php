@@ -167,6 +167,7 @@ return [
          * Package Service Providers...
          */
         App\Theme\ThemeServiceProvider::class,
+        App\Core\Util\JSON\JSONServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -231,6 +232,9 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        //Custom
+        'JSON' => \App\Core\Util\JSON\JSONFacade::class,
 
 
     ],
