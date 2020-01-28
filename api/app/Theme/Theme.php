@@ -3,8 +3,9 @@
 namespace App\Theme;
 
 use App\Resource\Resource;
-use App\Theme\Exceptions\ThemeConfigException;
 use Illuminate\Support\Facades\DB;
+use App\Core\Util\JSON\JSONValidator;
+use App\Theme\Exceptions\ThemeConfigException;
 use App\Theme\Exceptions\ThemeNotFoundException;
 use App\Theme\Exceptions\ThemeConfigNotFoundException;
 
@@ -157,7 +158,9 @@ class Theme
     public function getConfig($theme = false)
     {
         $path = $theme ? $this->getPath($theme) . '/config.json' : $this->getPath() . '/config.json';
-        $config = json_decode(file_get_contents($path));
+        $file = file_get_contents($path);
+
+        JSONValidator::validate($file);
 
         if (!file_exists($path)) {
             throw new ThemeConfigNotFoundException('Theme file not found');
