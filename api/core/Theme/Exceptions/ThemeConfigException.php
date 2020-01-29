@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Theme\Exceptions;
+namespace Core\Theme\Exceptions;
 
 use Exception;
 
@@ -9,7 +9,7 @@ class ThemeConfigException extends Exception
     /**
      * ThemeConfigException constructor.
      *
-     * @param $field
+     * @param $message
      * @param $theme
      */
     public function __construct($message, $theme)

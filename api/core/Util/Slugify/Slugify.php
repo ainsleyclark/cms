@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Util\Slugify;
+namespace Core\Util\Slugify;
 
 class Slugify {
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Util\JSON;
+namespace Core\Util\JSON;
 
 use Illuminate\Support\ServiceProvider;
 

@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Theme;
+namespace Core\Theme;
 
 use JSON;
-use App\Resource\Resource;
+use Core\Resource\Resource;
 use Illuminate\Support\Facades\DB;
-use App\Theme\Exceptions\ThemeConfigException;
-use App\Theme\Exceptions\ThemeNotFoundException;
-use App\Theme\Exceptions\ThemeConfigNotFoundException;
+use Core\Theme\Exceptions\ThemeConfigException;
+use Core\Theme\Exceptions\ThemeNotFoundException;;
 
 class Theme
 {
@@ -49,8 +48,6 @@ class Theme
     /**
      * Theme constructor.
      *
-     * @throws ThemeConfigException
-     * @throws ThemeConfigNotFoundException
      * @throws ThemeNotFoundException
      */
     public function __construct()
@@ -96,7 +93,6 @@ class Theme
      * Set the current theme.
      *
      * @return bool|void
-     * @throws ThemeConfigException
      * @throws ThemeNotFoundException
      */
     public function set()
@@ -151,23 +147,12 @@ class Theme
      *
      * @param bool $theme
      * @return mixed
-     * @throws ThemeConfigException
-     * @throws ThemeConfigNotFoundException
      * @throws ThemeNotFoundException
      */
     public function getConfig($theme = false)
     {
-        $path = $theme ? $this->getPath($theme) . '/config.json' : $this->getPath() . '/config.txt';
-
-        JSON::validate($path);
-
-        if (!file_exists($path)) {
-            throw new ThemeConfigNotFoundException('Theme file not found');
-        }
-
-        if (!isset($config)) {
-            throw new ThemeConfigException('Syntax error, please review JSON file.', $this->theme);
-        }
+        $path = $theme ? $this->getPath($theme) . '/config.json' : $this->getPath() . '/config.json';
+        $config = JSON::validate($path, $theme);
 
         $this->themeConfig = $config;
 
@@ -178,8 +163,6 @@ class Theme
      * Get all of the themes configuration
      *
      * @return array
-     * @throws ThemeConfigException
-     * @throws ThemeConfigNotFoundException
      * @throws ThemeNotFoundException
      */
     public function getAllConfig()
@@ -233,16 +216,19 @@ class Theme
      * table.
      *
      * @param $theme
-     * @throws ThemeConfigException
-     * @throws ThemeConfigNotFoundException
      * @throws ThemeNotFoundException
      */
     private function setTheme($theme)
     {
         $config = $this->getConfig($theme);
 
+        //Update active theme & config
+        DB::table('settings')->where('name',  'theme_active')->update(['value' => $theme]);
+        DB::table('settings')->where('name', 'theme_config')->update(['value' => serialize($config)]);
+
         //Insert into resources table
-        if (isset($this->themeConfig->resources)) {
+        if (isset($config->resources)) {
+
             foreach ($this->themeConfig->resources as $resourceName => $resource) {
 
                 try {
@@ -284,10 +270,7 @@ class Theme
 //            }
 //        }
 
-        //Update active theme & config
-        $settingsTable = DB::table('settings');
-        $settingsTable->where('name',  'theme_active')->update(['value' => $theme]);
-        $settingsTable->where('name', 'theme_config')->update(['value' => serialize($this->themeConfig)]);
+
     }
 
     /**

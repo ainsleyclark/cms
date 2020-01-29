@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Theme;
+namespace Core\Theme;
 
-use App\Theme\ThemeContract;
 use Illuminate\Support\ServiceProvider;
 
 class ThemeServiceProvider extends ServiceProvider
@@ -15,7 +14,7 @@ class ThemeServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('view.finder', function ($app) {
-            return new \App\Theme\ThemeViewFinder($app['files'], $app['config']['view.paths'], null);
+            return new ThemeViewFinder($app['files'], $app['config']['view.paths'], null);
         });
     }
 

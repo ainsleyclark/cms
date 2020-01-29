@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Resource;
+namespace Core\Resource;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
-use App\Theme\Exceptions\ThemeConfigException;
+use Core\Theme\Exceptions\ThemeConfigException;
 
 class Resource extends Model
 {

@@ -27,7 +27,7 @@
         "menu_position": 4
       }
     },
-    "posts": {
+    "hello": {
       "name": "Posts",
       "singular_name": "News Article",
       "slug": "news",

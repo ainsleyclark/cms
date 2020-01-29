@@ -24,8 +24,4 @@ class CoreModel extends Model
         }
     }
 
-
-
-
-
 }

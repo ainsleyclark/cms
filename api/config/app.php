@@ -162,12 +162,11 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
-
         /*
          * Package Service Providers...
          */
-        App\Theme\ThemeServiceProvider::class,
-        App\Core\Util\JSON\JSONServiceProvider::class,
+        Core\Theme\ThemeServiceProvider::class,
+        Core\Util\JSON\JSONServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -178,9 +177,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\HelperServiceProvider::class,
-
-
-
 
     ],
 
@@ -234,8 +230,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         //Custom
-        'JSON' => \App\Core\Util\JSON\JSONFacade::class,
-
+        'JSON' => Core\Util\JSON\JSONFacade::class,
 
     ],
 

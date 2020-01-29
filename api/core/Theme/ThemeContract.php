@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Theme;
+namespace Core\Theme;
 
 interface ThemeContract
 {

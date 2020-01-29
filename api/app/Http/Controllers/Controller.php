@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Core\Theme\Theme;
 use App\Models\CoreModel;
-use App\Theme\Theme;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Controller extends BaseController
 {

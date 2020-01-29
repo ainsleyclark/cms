@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Theme;
+namespace Core\Theme;
 
-use App\Theme\Theme;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\FileViewFinder;
+use Illuminate\Filesystem\Filesystem;
 
 class ThemeViewFinder extends FileViewFinder
 {
