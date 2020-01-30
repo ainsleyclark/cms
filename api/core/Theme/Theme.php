@@ -40,18 +40,18 @@ class Theme
     protected $viewPath;
 
     /**
-     * Resources model used for setting theme.
-     *
-     * @var
-     */
-    protected $resource;
-
-    /**
      * Settings model.
      *
      * @var
      */
     protected $settings;
+
+    /**
+     * Resources model used for setting theme.
+     *
+     * @var
+     */
+    protected $resource;
 
     /**
      * Theme constructor.
@@ -117,7 +117,8 @@ class Theme
     }
 
     /**
-     * Checks if the current theme configuration file is the same as the one stored in the databsae.
+     * Checks if the current theme configuration file is
+     * the same as the one stored in the database.
      *
      * @return bool
      */
@@ -272,6 +273,9 @@ class Theme
 
                 try {
                     dump('to do ');
+
+                    // INSERT INTO CATEGORIES TABLE not content, user will do that
+                    // make a category model etc
                 } catch (ThemeConfigException $e) {
                     throw $e;
                 }
