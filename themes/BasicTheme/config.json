@@ -35,6 +35,7 @@
       "name": "Types",
       "singular_name": "Type",
       "slug": "type",
+      "pages": true,
       "resources": [
         "posts"
       ]

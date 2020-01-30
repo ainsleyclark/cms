@@ -18,6 +18,8 @@ class CreateCategoryContentTable extends Migration
             $table->text('name');
             $table->string('fields');
             $table->integer('category_id');
+            $table->string('description')->nullable();
+            $table->string('parent_id')->nullable();
             $table->timestamps();
         });
     }

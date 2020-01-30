@@ -2,6 +2,7 @@
 
 namespace Core\Theme;
 
+use Core\Categories\Categories;
 use JSON;
 use Core\Resource\Resource;
 use Core\Settings\Settings;
@@ -54,6 +55,13 @@ class Theme
     protected $resource;
 
     /**
+     * Categories model used for setting theme.
+     *
+     * @var
+     */
+    protected $categories;
+
+    /**
      * Theme constructor.
      *
      * @throws ThemeConfigException
@@ -64,6 +72,8 @@ class Theme
         $this->settings = new Settings();
 
         $this->resource = new Resource();
+
+        $this->categories = new Categories();
 
         $this->theme = $this->get();
 
@@ -241,6 +251,7 @@ class Theme
             foreach ($this->themeConfig->resources as $resourceName => $resource) {
 
                 try {
+
                     $data = [
                         'name' => $resourceName,
                         'friendly_name' => $resource->name,
@@ -272,10 +283,21 @@ class Theme
             foreach ($this->themeConfig->categories as $categoryName => $category) {
 
                 try {
-                    dump('to do ');
+
+                    //Best not for the theme to handle this data, just pass the obj and
+                    // let the model handle it
+
+                    $data = [
+                        'name' => $categoryName,
+                        'slug' => $category->slug,
+                        'theme' => $this->theme,
+                        'pages' => $category->pages,
+                        'resources' => $category->resources,
+                    ];
 
                     // INSERT INTO CATEGORIES TABLE not content, user will do that
                     // make a category model etc
+
                 } catch (ThemeConfigException $e) {
                     throw $e;
                 }
