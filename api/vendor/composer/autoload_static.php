@@ -486,7 +486,7 @@ class ComposerStaticInitf0bf0d5f4db1baba0a813ea2447bc223
         'Core\\Theme\\Exceptions\\ThemeNotFoundException' => __DIR__ . '/../..' . '/core/Theme/Exceptions/ThemeNotFoundException.php',
         'Core\\Theme\\Theme' => __DIR__ . '/../..' . '/core/Theme/Theme.php',
         'Core\\Theme\\ThemeContract' => __DIR__ . '/../..' . '/core/Theme/ThemeContract.php',
-        'Core\\Theme\\ThemeServiceProvider' => __DIR__ . '/../..' . '/core/Theme/ThemeServiceProvider.php',
+        'Core\\Theme\\ThemeServiceProvider' => __DIR__ . '/../..',
         'Core\\Theme\\ThemeViewFinder' => __DIR__ . '/../..' . '/core/Theme/ThemeViewFinder.php',
         'Core\\Util\\JSON\\JSON' => __DIR__ . '/../..' . '/core/Util/JSON/JSON.php',
         'Core\\Util\\JSON\\JSONFacade' => __DIR__ . '/../..' . '/core/Util/JSON/JSONFacade.php',

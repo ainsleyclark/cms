@@ -1,7 +1,8 @@
 <?php
 
-namespace Core\Theme;
+namespace Core\Theme\Providers;
 
+use Core\Theme\ThemeViewFinder;
 use Illuminate\Support\ServiceProvider;
 
 class ThemeServiceProvider extends ServiceProvider

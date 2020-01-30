@@ -4,6 +4,7 @@ namespace Core\Theme;
 
 use JSON;
 use Core\Resource\Resource;
+use Core\Settings\Settings;
 use Illuminate\Support\Facades\DB;
 use Core\Theme\Exceptions\ThemeConfigException;
 use Core\Theme\Exceptions\ThemeNotFoundException;;
@@ -39,11 +40,18 @@ class Theme
     protected $viewPath;
 
     /**
-     * Resources used for setting theme.
+     * Resources model used for setting theme.
      *
      * @var
      */
     protected $resource;
+
+    /**
+     * Settings model.
+     *
+     * @var
+     */
+    protected $settings;
 
     /**
      * Theme constructor.
@@ -61,6 +69,8 @@ class Theme
         $this->check();
 
         $this->viewPath = $this->getViewPaths();
+
+        $this->settings = new Settings();
 
         $this->resource = new Resource();
 
@@ -216,19 +226,19 @@ class Theme
      * table.
      *
      * @param $theme
+     * @throws ThemeConfigException
      * @throws ThemeNotFoundException
      */
     private function setTheme($theme)
     {
         $config = $this->getConfig($theme);
 
-        //Update active theme & config
-        DB::table('settings')->where('name',  'theme_active')->update(['value' => $theme]);
-        DB::table('settings')->where('name', 'theme_config')->update(['value' => serialize($config)]);
+        //Update settings table with new theme and configuration.
+        $this->settings->store('theme_active', $theme);
+        $this->settings->store('theme_config', serialize($config));
 
         //Insert into resources table
         if (isset($config->resources)) {
-
             foreach ($this->themeConfig->resources as $resourceName => $resource) {
 
                 try {
@@ -252,25 +262,24 @@ class Theme
                     }
 
                 } catch (ThemeConfigException $e) {
-                    //dump('in');
-                    dd($e);
+                    throw new ThemeConfigException($e->getMessage(), $theme);
                 }
+
             }
         }
 
         //Insert into categories table
-//        if (isset($this->themeConfig->categories)) {
-//            foreach ($this->themeConfig->categories as $categoryName => $category) {
-//
-//                try {
-//                    dump('to do ');
-//                } catch (ThemeConfigException $e) {
-//                    throw $e;
-//                }
-//            }
-//        }
+        if (isset($this->themeConfig->categories)) {
+            foreach ($this->themeConfig->categories as $categoryName => $category) {
 
+                try {
+                    dump('to do ');
+                } catch (ThemeConfigException $e) {
+                    throw $e;
+                }
 
+            }
+        }
     }
 
     /**

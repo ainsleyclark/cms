@@ -58,6 +58,7 @@ class Resource extends Model
      * Get resource by name.
      *
      * @param $name
+     * @param $theme
      * @return bool|Model|\Illuminate\Database\Query\Builder|object|null
      */
     public function getByName($name, $theme)
@@ -85,7 +86,6 @@ class Resource extends Model
 
         //If names are duplicates throw error getting logic error with it being comapred currently.
 
-
         $rules = [
             'name' => 'required|unique:resources,name',
             'friendly_name' => 'required',
@@ -103,9 +103,6 @@ class Resource extends Model
 
             $rules['name'] = 'required|unique:resources,name,' . $resourceId;
             $rules['slug'] = 'unique:resources,slug,' . $resourceId;
-
-            dump($resourceId);
-            dump($data);
 
             $validator = Validator::make($data, $rules, $this->validatorMessages);
 
@@ -136,26 +133,5 @@ class Resource extends Model
 
             return false;
         }
-    }
-
-    /**
-     * Slugifies the given input
-     *
-     * @param $text
-     * @return bool|false|string|string[]|null
-     */
-    private function slugify($text){
-        $text = preg_replace('~[^\pL\d]+~u', '-', $text);
-        $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
-        $text = preg_replace('~[^-\w]+~', '', $text);
-        $text = trim($text, '-');
-        $text = preg_replace('~-+~', '-', $text);
-        $text = strtolower($text);
-
-        if (empty($text)) {
-            return 'n-a';
-        }
-
-        return $text;
     }
 }

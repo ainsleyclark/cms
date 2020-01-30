@@ -165,7 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
-        Core\Theme\ThemeServiceProvider::class,
+        Core\Theme\Providers\ThemeServiceProvider::class,
         Core\Util\JSON\JSONServiceProvider::class,
 
         /*
