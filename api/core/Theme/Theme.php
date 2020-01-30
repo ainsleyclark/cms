@@ -56,10 +56,15 @@ class Theme
     /**
      * Theme constructor.
      *
+     * @throws ThemeConfigException
      * @throws ThemeNotFoundException
      */
     public function __construct()
     {
+        $this->settings = new Settings();
+
+        $this->resource = new Resource();
+
         $this->theme = $this->get();
 
         $this->themePath = $this->getPath();
@@ -69,10 +74,6 @@ class Theme
         $this->check();
 
         $this->viewPath = $this->getViewPaths();
-
-        $this->settings = new Settings();
-
-        $this->resource = new Resource();
 
 //        if (!$this->check()) {
 //            $this->set();
@@ -88,9 +89,7 @@ class Theme
      */
     public function get()
     {
-        $theme = DB::table('settings')
-            ->where('name',  'theme_active')
-            ->value('value');
+        $theme = $this->settings->getValueByName('theme_active');
 
         if (!$theme) {
             throw new ThemeNotFoundException($this->theme);
@@ -103,6 +102,7 @@ class Theme
      * Set the current theme.
      *
      * @return bool|void
+     * @throws ThemeConfigException
      * @throws ThemeNotFoundException
      */
     public function set()
@@ -123,10 +123,7 @@ class Theme
      */
     private function check()
     {
-        $existingThemeConfig = DB::table('settings')
-            ->where('name', 'theme_config')
-            ->value('value');
-        $existingThemeConfig = unserialize($existingThemeConfig);
+        $existingThemeConfig = unserialize($this->settings->getValueByName('theme_config'));
 
         if ($existingThemeConfig != $this->themeConfig || !isset($existingThemeConfig)) {
             return false;
@@ -226,6 +223,7 @@ class Theme
      * table.
      *
      * @param $theme
+     * @return mixed
      * @throws ThemeConfigException
      * @throws ThemeNotFoundException
      */
@@ -280,6 +278,8 @@ class Theme
 
             }
         }
+
+        return $theme;
     }
 
     /**
