@@ -2,11 +2,10 @@
 
 namespace Core\Theme;
 
-use Core\Categories\Categories;
 use JSON;
 use Core\Resource\Resource;
 use Core\Settings\Settings;
-use Illuminate\Support\Facades\DB;
+use Core\Categories\Categories;
 use Core\Theme\Exceptions\ThemeConfigException;
 use Core\Theme\Exceptions\ThemeNotFoundException;;
 
@@ -73,7 +72,7 @@ class Theme
 
         $this->resource = new Resource();
 
-        $this->categories = new Categories();
+        //$this->categories = new Categories();
 
         $this->theme = $this->get();
 
@@ -246,11 +245,15 @@ class Theme
         $this->settings->store('theme_active', $theme);
         $this->settings->store('theme_config', serialize($config));
 
+        return;
+
         //Insert into resources table
         if (isset($config->resources)) {
             foreach ($this->themeConfig->resources as $resourceName => $resource) {
 
                 try {
+
+                    //Change this, pass data instead
 
                     $data = [
                         'name' => $resourceName,

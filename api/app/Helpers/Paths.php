@@ -20,7 +20,7 @@ if (!function_exists('root_path')) {
 if (!function_exists('theme_path')) {
 
     function theme_path() {
-        $activeTheme = DB::table('options')->where('option_name', 'active_theme')->value('option_value');
+        $activeTheme = DB::table('settings')->where('name', 'theme_active')->value('value');
         return dirname(base_path()) . '/themes/' . $activeTheme;
     }
 }

@@ -101,8 +101,9 @@ class Resource extends Model
 
             $resourceId = $this->getByName($resource, $data['theme'])->id;
 
-            $rules['name'] = 'required|unique:resources,name,' . $resourceId;
-            $rules['slug'] = 'unique:resources,slug,' . $resourceId;
+            //Somethings not working herer
+            //$rules['name'] = 'required|unique:resources,name,' . $resourceId;
+           // $rules['slug'] = 'unique:resources,slug,' . $resourceId;
 
             $validator = Validator::make($data, $rules, $this->validatorMessages);
 

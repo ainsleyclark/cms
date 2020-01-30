@@ -70,6 +70,7 @@ return array(
     'Carbon\\Traits\\Units' => $vendorDir . '/nesbot/carbon/src/Carbon/Traits/Units.php',
     'Carbon\\Traits\\Week' => $vendorDir . '/nesbot/carbon/src/Carbon/Traits/Week.php',
     'Carbon\\Translator' => $vendorDir . '/nesbot/carbon/src/Carbon/Translator.php',
+    'Core\\Categories\\Categories' => $baseDir . '/core/Categories/Categories.php',
     'Core\\Pages\\PagesModel' => $baseDir . '/core/Pages/PagesModel.php',
     'Core\\Resource\\Resource' => $baseDir . '/core/Resource/Resource.php',
     'Core\\Settings\\Settings' => $baseDir . '/core/Settings/Settings.php',
