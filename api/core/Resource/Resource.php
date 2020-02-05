@@ -4,11 +4,12 @@ namespace Core\Resource;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Core\Util\Slugify\Slugify;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
 use Core\Theme\Exceptions\ThemeConfigException;
 
-class Resource extends Model
+class Resource
 {
     /**
      *  The array of validator messages for resource.
@@ -22,8 +23,6 @@ class Resource extends Model
      */
     public function __construct()
     {
-        parent::__construct();
-
         $this->validatorMessages = [
             'required' => 'A :attribute name must be defined.',
             'name.unique' => 'The name \':input\' has already been defined.',
@@ -76,16 +75,12 @@ class Resource extends Model
     }
 
     /**
-     * @param $data
-     * @param bool $resource
-     * @return bool
-     * @throws ThemeConfigException
+     * Validation Rules for Resource.
+     *
+     * @param bool $resourceId
+     * @return array
      */
-    public function store($data, $resource = false)
-    {
-
-        //If names are duplicates throw error getting logic error with it being comapred currently.
-
+    public function validate($resourceId = false) {
         $rules = [
             'name' => 'required|unique:resources,name',
             'friendly_name' => 'required',
@@ -93,46 +88,93 @@ class Resource extends Model
             'theme' => 'required',
         ];
 
-        $data['updated_at'] = Carbon::now()->toDateTimeString();
-        $data['slug'] = $data['slug'] != '' ? $data['slug'] : $this->slugify($data['name']);
-
-        //Update
-        if ($resource) {
-
-            $resourceId = $this->getByName($resource, $data['theme'])->id;
-
-            //Somethings not working herer
-            //$rules['name'] = 'required|unique:resources,name,' . $resourceId;
-           // $rules['slug'] = 'unique:resources,slug,' . $resourceId;
-
-            $validator = Validator::make($data, $rules, $this->validatorMessages);
-
-            if ($validator->fails()) {
-                throw new ThemeConfigException($validator->errors()->first(), $data['theme']);
-            }
-
-            if (DB::table('resources')->where('name', $data['name'])->update($data)) {
-                return true;
-            }
-
-            return false;
-
-        //Create
-        } else {
-
-            $validator = Validator::make($data, $rules, $this->validatorMessages);
-
-            if ($validator->fails()) {
-                throw new ThemeConfigException($validator->errors()->first(), $data['theme']);
-            }
-
-            $insertUpdate['created_at'] = Carbon::now()->toDateTimeString();
-
-            if (DB::table('resources')->where('name', $data['name'])->insert($data)) {
-                return true;
-            }
-
-            return false;
+        if ($resourceId) {
+            $rules['name'] = 'required|unique:resources,name,' . $resourceId;
+            $rules['slug'] = 'unique:resources,slug,' . $resourceId;
         }
+
+        return $rules;
+    }
+
+    /**
+     * Convert data into Resource for storing in DB.
+     *
+     * @param $resource
+     * @return array
+     */
+    public function processData($resource) {
+        dump($resource);
+        $slug = $resource->slug != '' ? $resource->slug : Slugify::slugify($resource->name);
+
+        return [
+            'name' => $resource->name,
+            'friendly_name' => $resource->friendly_name,
+            'singular_name' => $resource->singular_name,
+            'slug' => $slug,
+            //'resource_categories' => $data['categories'],
+            'theme' => $resource->theme,
+            'icon' => $resource->options->icon,
+            'menu_position' => $resource->options->menu_position,
+            'single_template' => $resource->templates->single_template,
+            'index_template' => $resource->templates->index_template,
+            'updated_at' => Carbon::now()->toDateTimeString(),
+        ];
+    }
+
+    /**
+     * Creates a resource.
+     *
+     * @param $data
+     * @return bool
+     * @throws ThemeConfigException
+     */
+    public function store($data) {
+        $insert = $this->processData($data);
+        $insert['created_at'] = Carbon::now()->toDateTimeString();
+
+        $validator = Validator::make($insert, $this->validate(), $this->validatorMessages);
+
+        if ($validator->fails()) {
+            throw new ThemeConfigException($validator->errors()->first(), $insert['theme']);
+        }
+
+        if (DB::table('resources')->where('name', $insert['name'])->insert($insert)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Updates a resource.
+     *
+     * @param $data
+     * @param bool $resource
+     * @return bool
+     * @throws ThemeConfigException
+     */
+    public function update($data, $resource)
+    {
+        $update = $this->processData($data);
+        $resourceId = $this->getByName($resource, $update['theme'])->id;
+
+        $validator = Validator::make($update, $this->validate($resourceId), $this->validatorMessages);
+
+        if ($validator->fails()) {
+            throw new ThemeConfigException($validator->errors()->first(), $update['theme']);
+        }
+
+        if (DB::table('resources')->where('name', $update['name'])->update($update)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $resource
+     */
+    public function delete($resource) {
+
     }
 }

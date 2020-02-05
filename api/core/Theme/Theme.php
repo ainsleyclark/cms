@@ -245,31 +245,22 @@ class Theme
         $this->settings->store('theme_active', $theme);
         $this->settings->store('theme_config', serialize($config));
 
-        return;
-
         //Insert into resources table
         if (isset($config->resources)) {
             foreach ($this->themeConfig->resources as $resourceName => $resource) {
 
                 try {
 
-                    //Change this, pass data instead
+                    $data = $resource;
+                    $data->friendly_name = $resource->name;
+                    $data->name = $resourceName;
+                    $data->theme = $this->theme;
 
-                    $data = [
-                        'name' => $resourceName,
-                        'friendly_name' => $resource->name,
-                        'singular_name' => $resource->singular_name,
-                        'slug' => $resource->slug,
-                        //'resource_categories' => $data['categories'],
-                        'theme' => $this->theme,
-                        'icon' => $resource->options->icon,
-                        'menu_position' => $resource->options->menu_position,
-                        'single_template' => $resource->templates->single_template,
-                        'index_template' => $resource->templates->index_template,
-                    ];
+                    dump($this->resource->getByName($resourceName, $this->theme));
+                    dump($resourceName);
 
                     if ($this->resource->getByName($resourceName, $this->theme)) {
-                        $this->resource->store($data, $resourceName);
+                        $this->resource->update($data, $resourceName);
                     } else {
                         $this->resource->store($data);
                     }

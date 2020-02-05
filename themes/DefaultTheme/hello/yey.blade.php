@@ -1,7 +1,7 @@
 Yeyyy
 
-{{ $test }}
+{{--{{ $test }}--}}
 
-{{ theme_path() }}
+{{--{{ theme_path() }}--}}
 
-<script src="{{ theme_path() }}/js/test.js"></script>
+{{--<script src="{{ theme_path() }}/js/test.js"></script>--}}
