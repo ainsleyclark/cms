@@ -2,16 +2,19 @@
 
 namespace Core\Categories;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Categories extends Model
+class CategoriesModel
 {
     /**
      * @param $obj
      */
-    public function create($obj)
+    public function store($obj)
     {
         DB::table('categories')->insert($obj);
+
+    }
+
+    public function update()
+    {
 
     }
 }

@@ -4,7 +4,7 @@ namespace Core\Settings;
 
 use Illuminate\Support\Facades\DB;
 
-class Settings
+class SettingsModel
 {
     /**
      * Updates or inserts a new setting.

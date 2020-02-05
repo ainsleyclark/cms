@@ -3,9 +3,9 @@
 namespace Core\Theme;
 
 use JSON;
-use Core\Resource\Resource;
-use Core\Settings\Settings;
-use Core\Categories\Categories;
+use Core\Settings\SettingsModel;
+use Core\Resource\ResourceModel;
+use Core\Categories\CategoriesModel;
 use Core\Theme\Exceptions\ThemeConfigException;
 use Core\Theme\Exceptions\ThemeNotFoundException;;
 
@@ -68,11 +68,11 @@ class Theme
      */
     public function __construct()
     {
-        $this->settings = new Settings();
+        $this->settings = new SettingsModel();
 
-        $this->resource = new Resource();
+        $this->resource = new ResourceModel();
 
-        //$this->categories = new Categories();
+        $this->categories = new CategoriesModel();
 
         $this->theme = $this->get();
 
@@ -84,10 +84,11 @@ class Theme
 
         $this->viewPath = $this->getViewPaths();
 
-//        if (!$this->check()) {
-//            $this->set();
-//        }
         $this->set();
+//        if (!$this->check()) {
+////            $this->set();
+////        }
+
     }
 
     /**
@@ -256,9 +257,6 @@ class Theme
                     $data->name = $resourceName;
                     $data->theme = $this->theme;
 
-                    dump($this->resource->getByName($resourceName, $this->theme));
-                    dump($resourceName);
-
                     if ($this->resource->getByName($resourceName, $this->theme)) {
                         $this->resource->update($data, $resourceName);
                     } else {
@@ -278,22 +276,22 @@ class Theme
 
                 try {
 
-                    //Best not for the theme to handle this data, just pass the obj and
-                    // let the model handle it
-
-                    $data = [
-                        'name' => $categoryName,
-                        'slug' => $category->slug,
-                        'theme' => $this->theme,
-                        'pages' => $category->pages,
-                        'resources' => $category->resources,
-                    ];
-
-                    // INSERT INTO CATEGORIES TABLE not content, user will do that
-                    // make a category model etc
+//                    $data = $category;
+//                    $data->friendly_name = $resource->name;
+//                    $data->name = $resourceName;
+//                    $data->theme = $this->theme;
+//
+//                    dump($this->resource->getByName($resourceName, $this->theme));
+//                    dump($resourceName);
+//
+//                    if ($this->resource->getByName($resourceName, $this->theme)) {
+//                        $this->resource->update($data, $resourceName);
+//                    } else {
+//                        $this->resource->store($data);
+//                    }
 
                 } catch (ThemeConfigException $e) {
-                    throw $e;
+                    throw new ThemeConfigException($e->getMessage(), $theme);
                 }
 
             }

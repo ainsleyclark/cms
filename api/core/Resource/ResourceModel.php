@@ -7,9 +7,10 @@ use Illuminate\Support\Facades\DB;
 use Core\Util\Slugify\Slugify;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
+use Core\Resource\Requests\ResourcesRequest;
 use Core\Theme\Exceptions\ThemeConfigException;
 
-class Resource
+class ResourceModel
 {
     /**
      *  The array of validator messages for resource.
@@ -21,13 +22,10 @@ class Resource
     /**
      * Resource constructor.
      */
-    public function __construct()
+    public function __construct(ResourcesRequest $resourcesRequest)
     {
-        $this->validatorMessages = [
-            'required' => 'A :attribute name must be defined.',
-            'name.unique' => 'The name \':input\' has already been defined.',
-            'slug.unique' => 'The slug \':input\' has already been defined.',
-        ];
+        dd($resourcesRequest);
+//        $this->validatorMessages = ;
     }
 
     /**
@@ -75,35 +73,12 @@ class Resource
     }
 
     /**
-     * Validation Rules for Resource.
-     *
-     * @param bool $resourceId
-     * @return array
-     */
-    public function validate($resourceId = false) {
-        $rules = [
-            'name' => 'required|unique:resources,name',
-            'friendly_name' => 'required',
-            'slug' => 'unique:resources,slug',
-            'theme' => 'required',
-        ];
-
-        if ($resourceId) {
-            $rules['name'] = 'required|unique:resources,name,' . $resourceId;
-            $rules['slug'] = 'unique:resources,slug,' . $resourceId;
-        }
-
-        return $rules;
-    }
-
-    /**
      * Convert data into Resource for storing in DB.
      *
      * @param $resource
      * @return array
      */
     public function processData($resource) {
-        dump($resource);
         $slug = $resource->slug != '' ? $resource->slug : Slugify::slugify($resource->name);
 
         return [
@@ -132,11 +107,11 @@ class Resource
         $insert = $this->processData($data);
         $insert['created_at'] = Carbon::now()->toDateTimeString();
 
-        $validator = Validator::make($insert, $this->validate(), $this->validatorMessages);
-
-        if ($validator->fails()) {
-            throw new ThemeConfigException($validator->errors()->first(), $insert['theme']);
-        }
+//        $validator = Validator::make($insert, $this->validate(), $this->validatorMessages);
+//
+//        if ($validator->fails()) {
+//            throw new ThemeConfigException($validator->errors()->first(), $insert['theme']);
+//        }
 
         if (DB::table('resources')->where('name', $insert['name'])->insert($insert)) {
             return true;
@@ -158,11 +133,11 @@ class Resource
         $update = $this->processData($data);
         $resourceId = $this->getByName($resource, $update['theme'])->id;
 
-        $validator = Validator::make($update, $this->validate($resourceId), $this->validatorMessages);
+        //$validator = Validator::make($update, $this->validate($resourceId), $this->validatorMessages);
 
-        if ($validator->fails()) {
-            throw new ThemeConfigException($validator->errors()->first(), $update['theme']);
-        }
+//        if ($validator->fails()) {
+//            throw new ThemeConfigException($validator->errors()->first(), $update['theme']);
+//        }
 
         if (DB::table('resources')->where('name', $update['name'])->update($update)) {
             return true;
