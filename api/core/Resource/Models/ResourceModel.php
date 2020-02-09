@@ -1,31 +1,29 @@
 <?php
 
-namespace Core\Resource;
+namespace Core\Resource\Models;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Core\Util\Slugify\Slugify;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Validator;
-use Core\Resource\Requests\ResourcesRequest;
+use Core\Resource\Validation\ResourceValidation;
 use Core\Theme\Exceptions\ThemeConfigException;
 
 class ResourceModel
 {
     /**
-     *  The array of validator messages for resource.
+     *  The instance of validator messages & rules for resource.
      *
      * @var
      */
-    private $validatorMessages;
+    private $validator;
 
     /**
      * Resource constructor.
      */
-    public function __construct(ResourcesRequest $resourcesRequest)
+    public function __construct()
     {
-        dd($resourcesRequest);
-//        $this->validatorMessages = ;
+        $this->validator = new ResourceValidation();
     }
 
     /**
@@ -107,11 +105,11 @@ class ResourceModel
         $insert = $this->processData($data);
         $insert['created_at'] = Carbon::now()->toDateTimeString();
 
-//        $validator = Validator::make($insert, $this->validate(), $this->validatorMessages);
-//
-//        if ($validator->fails()) {
-//            throw new ThemeConfigException($validator->errors()->first(), $insert['theme']);
-//        }
+        $validator = $this->validator->validate($insert);
+
+        if ($validator->fails()) {
+            throw new ThemeConfigException($validator->errors()->first(), $insert['theme']);
+        }
 
         if (DB::table('resources')->where('name', $insert['name'])->insert($insert)) {
             return true;
@@ -131,25 +129,18 @@ class ResourceModel
     public function update($data, $resource)
     {
         $update = $this->processData($data);
-        $resourceId = $this->getByName($resource, $update['theme'])->id;
+        $resourceID = $this->getByName($resource, $update['theme'])->id;
 
-        //$validator = Validator::make($update, $this->validate($resourceId), $this->validatorMessages);
+        $validator = $this->validator->validate($update, $resourceID);
 
-//        if ($validator->fails()) {
-//            throw new ThemeConfigException($validator->errors()->first(), $update['theme']);
-//        }
+        if ($validator->fails()) {
+            throw new ThemeConfigException($validator->errors()->first(), $update['theme']);
+        }
 
         if (DB::table('resources')->where('name', $update['name'])->update($update)) {
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * @param $resource
-     */
-    public function delete($resource) {
-
     }
 }

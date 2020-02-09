@@ -4,8 +4,8 @@ namespace Core\Theme;
 
 use JSON;
 use Core\Settings\SettingsModel;
-use Core\Resource\ResourceModel;
-use Core\Categories\CategoriesModel;
+use Core\Resource\Models\ResourceModel;
+use Core\Categories\Models\CategoriesModel;
 use Core\Theme\Exceptions\ThemeConfigException;
 use Core\Theme\Exceptions\ThemeNotFoundException;;
 
@@ -275,6 +275,7 @@ class Theme
             foreach ($this->themeConfig->categories as $categoryName => $category) {
 
                 try {
+                    dd($category);
 
 //                    $data = $category;
 //                    $data->friendly_name = $resource->name;

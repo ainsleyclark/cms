@@ -1,24 +1,32 @@
 <?php
 
-namespace Core\Resource\Requests;
+namespace Core\Resource\Validation;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Validator;
+use Core\System\Contracts\ValidationContract;
 
-class ResourcesRequest extends FormRequest
+class ResourceValidation implements ValidationContract
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * The validation function, returns new validator.
      *
-     * @return bool
+     * @param $data
+     * @param bool $resourceID
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    public function authorize()
+    public function validate($data, $resourceID = false)
     {
-        return false;
+        if ($resourceID) {
+            return Validator::make($data, $this->rules($resourceID), $this->messages());
+        }
+
+        return Validator::make($data, $this->rules(), $this->messages());
     }
 
     /**
      * Get the validation rules that apply to a resource.
      *
+     * @param bool $resourceID
      * @return array
      */
     public function rules($resourceID = false)

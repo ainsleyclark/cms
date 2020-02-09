@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Categories;
+namespace Core\Categories\Models;
 
 class CategoriesModel
 {
