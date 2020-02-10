@@ -231,6 +231,7 @@ return [
 
         //Custom
         'JSON' => Core\Util\JSON\JSONFacade::class,
+        'Theme' => Core\Support\Facades\Theme::class,
 
     ],
 

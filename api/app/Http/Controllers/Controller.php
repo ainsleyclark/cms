@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Core\Theme\Theme;
+use Core\Support\Facades\Theme;
 use App\Models\CoreModel;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -22,8 +22,8 @@ class Controller extends BaseController
     public function __construct()
     {
 
-        $this->coreModel = new CoreModel();
-        $this->theme = new Theme();
+        //$this->coreModel = new CoreModel();
+        //$this->theme = new Theme();
     }
 
     /**
@@ -46,6 +46,6 @@ class Controller extends BaseController
     }
 
     public function test() {
-        dd($this->theme);
+        dd(Theme::get());
     }
 }

@@ -149,7 +149,7 @@ class Theme
      * @return string
      * @throws ThemeNotFoundException
      */
-    public function getPath($theme = false)
+    private function getPath($theme = false)
     {
         $path = $theme ? dirname(base_path()) . '/themes/' . $theme : dirname(base_path()) . '/themes/' . $this->theme;
 
@@ -275,7 +275,7 @@ class Theme
             foreach ($this->themeConfig->categories as $categoryName => $category) {
 
                 try {
-                    dd($category);
+                    //dd($category);
 
 //                    $data = $category;
 //                    $data->friendly_name = $resource->name;
