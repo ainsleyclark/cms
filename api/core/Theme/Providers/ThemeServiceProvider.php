@@ -16,7 +16,7 @@ class ThemeServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('theme', function($app) {
-            return new Theme;
+            return $app->make(Theme::class);
         });
 
         $this->app->bind('view.finder', function ($app) {

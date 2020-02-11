@@ -62,17 +62,20 @@ class Theme
 
     /**
      * Theme constructor.
+     * @param SettingsModel $settingsModel
+     * @param ResourceModel $resourceModel
+     * @param CategoriesModel $categoriesModel
      *
      * @throws ThemeConfigException
      * @throws ThemeNotFoundException
      */
-    public function __construct()
+    public function __construct(SettingsModel $settingsModel, ResourceModel $resourceModel, CategoriesModel $categoriesModel)
     {
-        $this->settings = new SettingsModel();
+        $this->settings = $settingsModel;
 
-        $this->resource = new ResourceModel();
+        $this->resource = $resourceModel;
 
-        $this->categories = new CategoriesModel();
+        $this->categories = $categoriesModel;
 
         $this->theme = $this->get();
 
@@ -301,12 +304,13 @@ class Theme
         return $theme;
     }
 
+
     /**
      * Get the themes thumbnail.
      *
      * @return bool|mixed
      */
-    private function getThumb()
+    public function getThumb()
     {
         $path = $this->themePath . '/thumbnail.*';
         $files = glob($path);

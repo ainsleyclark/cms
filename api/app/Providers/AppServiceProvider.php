@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,9 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadTranslationsFrom(base_path() . '/lang', 'en');
 
-        //Get view path
-        View::share ( 'test', 'I am Data 3' );
     }
 }
