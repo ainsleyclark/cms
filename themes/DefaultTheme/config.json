@@ -7,6 +7,9 @@
   },
 
   "options": {
+    "asset_paths": [
+      "assets"
+    ],
     "view_paths": [
       "views",
       "hello"

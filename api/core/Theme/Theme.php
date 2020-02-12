@@ -2,13 +2,18 @@
 
 namespace Core\Theme;
 
-use JSON;
+use Core\Util\JSON;
 use Core\Settings\SettingsModel;
 use Core\Resource\Models\ResourceModel;
 use Core\Categories\Models\CategoriesModel;
 use Core\Theme\Exceptions\ThemeConfigException;
 use Core\Theme\Exceptions\ThemeNotFoundException;;
 
+/**
+ * Class Theme
+ *
+ * @package Core\Theme
+ */
 class Theme
 {
     /**
@@ -72,9 +77,7 @@ class Theme
     public function __construct(SettingsModel $settingsModel, ResourceModel $resourceModel, CategoriesModel $categoriesModel)
     {
         $this->settings = $settingsModel;
-
         $this->resource = $resourceModel;
-
         $this->categories = $categoriesModel;
 
         $this->theme = $this->get();
@@ -149,6 +152,7 @@ class Theme
     /**
      * Get the current themes full path.
      *
+     * @param bool $theme
      * @return string
      * @throws ThemeNotFoundException
      */
@@ -168,12 +172,17 @@ class Theme
      *
      * @param bool $theme
      * @return mixed
+     * @throws ThemeConfigException
      * @throws ThemeNotFoundException
      */
     public function getConfig($theme = false)
     {
         $path = $theme ? $this->getPath($theme) . '/config.json' : $this->getPath() . '/config.json';
-        $config = JSON::validate($path, $theme);
+        $config = JSON::validate($path);
+
+        if (!$config) {
+            throw new ThemeConfigException('The theme\'s config file has not been found or is invalid in' . $path);
+        }
 
         $this->themeConfig = $config;
 
@@ -184,6 +193,7 @@ class Theme
      * Get all of the themes configuration
      *
      * @return array
+     * @throws ThemeConfigException
      * @throws ThemeNotFoundException
      */
     public function getAllConfig()
@@ -267,7 +277,7 @@ class Theme
                     }
 
                 } catch (ThemeConfigException $e) {
-                    throw new ThemeConfigException($e->getMessage(), $theme);
+                    throw new ThemeConfigException('hello', $theme);
                 }
 
             }
@@ -278,7 +288,7 @@ class Theme
             foreach ($this->themeConfig->categories as $categoryName => $category) {
 
                 try {
-                    //dd($category);
+                    dd($category);
 
 //                    $data = $category;
 //                    $data->friendly_name = $resource->name;

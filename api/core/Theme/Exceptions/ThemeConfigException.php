@@ -10,10 +10,9 @@ class ThemeConfigException extends Exception
      * ThemeConfigException constructor.
      *
      * @param $message
-     * @param $theme
      */
-    public function __construct($message, $theme)
+    public function __construct($message)
     {
-        parent::__construct("There is an error in the $theme configuration file. $message ");
+        parent::__construct($message);
     }
 }

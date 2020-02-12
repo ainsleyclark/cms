@@ -21,23 +21,24 @@ class ResourceModel
     /**
      * Resource constructor.
      */
-    public function __construct()
+    public function __construct(ResourceValidation $validator)
     {
-        $this->validator = new ResourceValidation();
+        $this->validator = $validator;
     }
 
     /**
      * Get resource by ID or get all resources, no param.
      *
-     * @param $resource_id
-     * @return bool|\Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
+     * @param bool $resourceID
+     * @return bool|object|null
      */
-    public function get($resource_id = false)
+    public function get($resourceID = false)
     {
-        $query = DB::table('resources');
+        $query = DB::table('resources')
+            ->orderBy('menu_position', 'asc');
 
-        if ($resource_id) {
-            $resource = $query->where('resource_id', $resource_id)->first();
+        if ($resourceID) {
+            $resource = $query->where('id', $resourceID)->first();
         } else {
             $resource = $query->get();
         }
@@ -68,30 +69,6 @@ class ResourceModel
         }
 
         return $resource;
-    }
-
-    /**
-     * Convert data into Resource for storing in DB.
-     *
-     * @param $resource
-     * @return array
-     */
-    public function processData($resource) {
-        $slug = $resource->slug != '' ? $resource->slug : Slugify::slugify($resource->name);
-
-        return [
-            'name' => $resource->name,
-            'friendly_name' => $resource->friendly_name,
-            'singular_name' => $resource->singular_name,
-            'slug' => $slug,
-            //'resource_categories' => $data['categories'],
-            'theme' => $resource->theme,
-            'icon' => $resource->options->icon,
-            'menu_position' => $resource->options->menu_position,
-            'single_template' => $resource->templates->single_template,
-            'index_template' => $resource->templates->index_template,
-            'updated_at' => Carbon::now()->toDateTimeString(),
-        ];
     }
 
     /**
@@ -142,5 +119,29 @@ class ResourceModel
         }
 
         return false;
+    }
+
+    /**
+     * Convert data into Resource for storing in DB.
+     *
+     * @param $resource
+     * @return array
+     */
+    private function processData($resource) {
+        $slug = $resource->slug != '' ? $resource->slug : Slugify::slugify($resource->name);
+
+        return [
+            'name' => $resource->name,
+            'friendly_name' => $resource->friendly_name,
+            'singular_name' => $resource->singular_name,
+            'slug' => $slug,
+            //'resource_categories' => $data['categories'],
+            'theme' => $resource->theme,
+            'icon' => $resource->options->icon,
+            'menu_position' => $resource->options->menu_position,
+            'single_template' => $resource->templates->single_template,
+            'index_template' => $resource->templates->index_template,
+            'updated_at' => Carbon::now()->toDateTimeString(),
+        ];
     }
 }
