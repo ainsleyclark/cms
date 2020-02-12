@@ -481,7 +481,7 @@ class ComposerStaticInitf0bf0d5f4db1baba0a813ea2447bc223
         'Carbon\\Translator' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Translator.php',
         'Core\\Categories\\Models\\CategoriesModel' => __DIR__ . '/../..' . '/core/Categories/Models/CategoriesModel.php',
         'Core\\Categories\\Validation\\CategoryValidation' => __DIR__ . '/../..' . '/core/Categories/Validation/CategoryValidation.php',
-        'Core\\Http\\Controllers\\AssetsController' => __DIR__ . '/../..' . '/core/Http/Controllers/AssetsController.php',
+        'Core\\Http\\Controllers\\AssetsController' => __DIR__ . '/../..',
         'Core\\Pages\\PagesModel' => __DIR__ . '/../..' . '/core/Pages/PagesModel.php',
         'Core\\Resource\\Models\\ResourceModel' => __DIR__ . '/../..' . '/core/Resource/Models/ResourceModel.php',
         'Core\\Resource\\Validation\\ResourceValidation' => __DIR__ . '/../..' . '/core/Resource/Validation/ResourceValidation.php',

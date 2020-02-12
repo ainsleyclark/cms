@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Http\Controllers;
+namespace Core\Http\Controllers\Frontend;
 
 use Illuminate\Http\Request;
 use Core\System\Assets;
@@ -27,14 +27,10 @@ class AssetsController extends Controller
         $this->assets = $assets;
     }
 
-
-    public function test()
-    {
-
-        dd($this->assets);
-        return 'hello';
-    }
-
+    /**
+     * @param $asset
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function serveAssets($asset)
     {
         $file = $this->assets->resolve($asset)['file'];
