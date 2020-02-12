@@ -95,6 +95,8 @@ class Theme
 ////            $this->set();
 ////        }
 
+        $this->getAssetsPath();
+
     }
 
     /**
@@ -140,7 +142,7 @@ class Theme
      */
     private function check()
     {
-        $existingThemeConfig = unserialize($this->settings->getValueByName('theme_config'));
+        $existingThemeConfig = unserialize($this->settings->getValueByName('theme_config') ?? []);
 
         if ($existingThemeConfig != $this->themeConfig || !isset($existingThemeConfig)) {
             return false;
@@ -156,7 +158,7 @@ class Theme
      * @return string
      * @throws ThemeNotFoundException
      */
-    private function getPath($theme = false)
+    public function getPath($theme = false)
     {
         $path = $theme ? dirname(base_path()) . '/themes/' . $theme : dirname(base_path()) . '/themes/' . $this->theme;
 
@@ -207,6 +209,22 @@ class Theme
         }
 
         return $themesConfig;
+    }
+
+    /**
+     * Get the themes asset paths.
+     *
+     * @return string
+     */
+    public function getAssetsPath()
+    {
+        $paths = $this->themeConfig->options->asset_paths;
+
+        if (!$paths) {
+            return 'assets';
+        }
+
+        return $paths;
     }
 
     /**
@@ -288,7 +306,7 @@ class Theme
             foreach ($this->themeConfig->categories as $categoryName => $category) {
 
                 try {
-                    dd($category);
+                    //dd($category);
 
 //                    $data = $category;
 //                    $data->friendly_name = $resource->name;
@@ -313,7 +331,6 @@ class Theme
 
         return $theme;
     }
-
 
     /**
      * Get the themes thumbnail.

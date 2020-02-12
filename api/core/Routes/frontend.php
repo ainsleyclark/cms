@@ -10,3 +10,16 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/', function () {
+    return view('yey');
+});
+
+Route::get('/test', 'Controller@test');
+
+Route::group(['namespace' => 'Core\Http\Controllers'], function() {
+    Route::get('/testing', 'AssetsController@test');
+    Route::get(Theme::getAssetsPath()[0] . '/{assets}', 'AssetsController@serveAssets')->where('assets', '.*');
+});
+
+

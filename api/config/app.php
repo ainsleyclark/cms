@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
         Core\Theme\Providers\ThemeServiceProvider::class,
+        Core\Routes\Providers\RoutesServiceProvider::class,
 
         /*
          * Application Service Providers...

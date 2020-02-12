@@ -1,0 +1,12 @@
+{
+    "name": "ainsleyclark/cms",
+    "description": "A simple CMS",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ainsley",
+            "email": "info@ainsleyclark.com"
+        }
+    ],
+    "require": {}
+}
