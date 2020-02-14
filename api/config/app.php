@@ -166,7 +166,9 @@ return [
          * Package Service Providers...
          */
         Core\Theme\Providers\ThemeServiceProvider::class,
-        Core\Routes\Providers\RoutesServiceProvider::class,
+        Core\System\Providers\RoutesServiceProvider::class,
+        Core\System\Providers\CoreCMSServiceProvider::class,
+        Core\System\Providers\ConsoleProvider::class,
 
         /*
          * Application Service Providers...
@@ -176,7 +178,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        App\Providers\HelperServiceProvider::class,
 
     ],
 
@@ -230,7 +231,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         //Custom
-        'JSON' => Core\Util\JSON\JSONFacade::class,
         'Theme' => Core\Support\Facades\Theme::class,
 
     ],

@@ -56,11 +56,11 @@ trait Localization
     protected static $humanDiffOptions = CarbonInterface::NO_ZERO_DIFF;
 
     /**
-     * @param int $humanDiffOptions
-     *@see SettingsModel
-     *
      * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
      *             You should rather use the ->settings() method.
+     * @see settings
+     *
+     * @param int $humanDiffOptions
      */
     public static function setHumanDiffOptions($humanDiffOptions)
     {
@@ -68,11 +68,11 @@ trait Localization
     }
 
     /**
-     * @param int $humanDiffOption
-     *@see SettingsModel
-     *
      * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
      *             You should rather use the ->settings() method.
+     * @see settings
+     *
+     * @param int $humanDiffOption
      */
     public static function enableHumanDiffOption($humanDiffOption)
     {
@@ -80,11 +80,11 @@ trait Localization
     }
 
     /**
-     * @param int $humanDiffOption
-     *@see SettingsModel
-     *
      * @deprecated To avoid conflict between different third-party libraries, static setters should not be used.
      *             You should rather use the ->settings() method.
+     * @see settings
+     *
+     * @param int $humanDiffOption
      */
     public static function disableHumanDiffOption($humanDiffOption)
     {

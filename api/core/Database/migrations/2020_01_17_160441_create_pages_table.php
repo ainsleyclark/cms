@@ -20,6 +20,10 @@ class CreatePagesTable extends Migration
             $table->integer('author_id');
             $table->string('template');
             $table->boolean('cacheable');
+            $table->text('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->boolean('crawlable')->default(true);
+            $table->text('og_image');
             $table->timestamps();
         });
     }

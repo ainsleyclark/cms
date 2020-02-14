@@ -1,11 +1,20 @@
 <?php
 
-namespace App\Providers;
+namespace Core\System\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class HelperServiceProvider extends ServiceProvider
+class ConsoleProvider extends ServiceProvider
 {
+    /**
+     * The array of command paths
+     *
+     * @var
+     */
+    protected $commands = [
+        'Core\Theme\Console\MakeTheme',
+    ];
+
     /**
      * Register services.
      *
@@ -13,9 +22,7 @@ class HelperServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        foreach (glob(app_path().'/Helpers/*.php') as $filename){
-            require_once($filename);
-        }
+        $this->commands($this->commands);
     }
 
     /**
@@ -27,4 +34,6 @@ class HelperServiceProvider extends ServiceProvider
     {
         //
     }
+
+
 }

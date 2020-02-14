@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Settings;
+namespace Core\Settings\Models;
 
 use Illuminate\Support\Facades\DB;
 

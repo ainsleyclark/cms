@@ -3,7 +3,7 @@
 namespace Core\Theme;
 
 use Core\Util\JSON;
-use Core\Settings\SettingsModel;
+use Core\Settings\Models\SettingsModel;
 use Core\Resource\Models\ResourceModel;
 use Core\Categories\Models\CategoriesModel;
 use Core\Theme\Exceptions\ThemeConfigException;
@@ -17,49 +17,49 @@ use Core\Theme\Exceptions\ThemeNotFoundException;;
 class Theme
 {
     /**
-     * Themes name.
+     * The themes name.
      *
      * @var
      */
     protected $theme;
 
     /**
-     * Theme absolute path.
+     * The theme's absolute path.
      *
      * @var mixed
      */
     protected $themePath;
 
     /**
-     * Theme config from path.
+     * The theme's config from path.
      *
      * @var
      */
     protected $themeConfig;
 
     /**
-     * Views path.
+     * The theme's views path.
      *
      * @var
      */
     protected $viewPath;
 
     /**
-     * Settings model.
+     * The settings model.
      *
      * @var
      */
     protected $settings;
 
     /**
-     * Resources model used for setting theme.
+     * The resources model used for setting theme.
      *
      * @var
      */
     protected $resource;
 
     /**
-     * Categories model used for setting theme.
+     * The categories model used for setting theme.
      *
      * @var
      */
@@ -67,10 +67,10 @@ class Theme
 
     /**
      * Theme constructor.
+     *
      * @param SettingsModel $settingsModel
      * @param ResourceModel $resourceModel
      * @param CategoriesModel $categoriesModel
-     *
      * @throws ThemeConfigException
      * @throws ThemeNotFoundException
      */
@@ -86,17 +86,15 @@ class Theme
 
         $this->themeConfig = $this->getConfig();
 
+        $this->getAssetsPath();
+
         $this->check();
 
         $this->viewPath = $this->getViewPaths();
 
-        $this->set();
-//        if (!$this->check()) {
-////            $this->set();
-////        }
-
-        $this->getAssetsPath();
-
+        if (!$this->check()) {
+            $this->set();
+        }
     }
 
     /**
