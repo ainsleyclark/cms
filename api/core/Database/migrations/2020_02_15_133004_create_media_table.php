@@ -17,7 +17,6 @@ class CreateMediaTable extends Migration
             $table->bigIncrements('id');
             $table->string('url')->unique();
             $table->text('type');
-            $table->text('caption')->nullable();
             $table->text('description')->nullable();
             $table->integer('user_id');
             $table->timestamps();

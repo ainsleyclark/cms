@@ -3,15 +3,13 @@
 namespace Core\Media;
 
 use Carbon\Carbon;
+use WebPConvert\WebPConvert;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManager as Image;
 use Core\Resource\Validation\MediaValidation;
 
 class Media {
-
-
-    // Someone uploads
 
     /**
      * The path where media files should be stored.
@@ -21,13 +19,28 @@ class Media {
     protected $mediaPath;
 
     /**
+     * The images sizes array from media/config.
+     *
+     * @var
+     */
+    protected $imageSizes;
+
+    /**
+     * The Image Manager.
+     *
+     * @var
+     */
+    protected $imageHelper;
+
+    /**
      * Media constructor.
      *
-     * @param MediaValidation $validator
      */
-    public function __construct(MediaValidation $validator)
+    public function __construct()
     {
-        $this->mediaPath = dirname(base_path()) . '/public/uploads';
+        $this->mediaPath = public_path() . '/uploads';
+        $this->imageSizes = config('media.image_sizes');
+        $this->imageHelper = new Image();
     }
 
     /**
@@ -39,12 +52,7 @@ class Media {
     public function get($id = false, $size = false)
     {
         $query = DB::table('media');
-
-        if ($id) {
-            $media = $query->where('id', $id)->first();
-        } else {
-            $media = $query->get();
-        }
+        $media = $id ? $query->where('id', $id)->first() : $query->get();
 
         if (!$media) {
             return false;
@@ -53,36 +61,83 @@ class Media {
         return $media;
     }
 
-    /**
-     *
-     */
-    public function getFullPath($path)
+    public function getImageBySize($path)
     {
-        return $this->mediaPath . $path;
+
     }
 
-
     /**
-     * This does something.
+     * Stores an image and updates database.
      *
-     * @return array
+     * @param bool $data
+     * @param bool $file
+     * @return bool
+     * @throws \WebPConvert\Convert\Exceptions\ConversionFailedException
      */
-    public function getImageSizes()
+    public function store($data = false, $file = false)
     {
-        return [
-            'thumbnail' => '150x150',
-        ];
-    }
+        $path = $this->saveFile($file);
 
-
-    public function store($data, $file)
-    {
-        $name = $file->getClientOriginalName();
+        if (!$path) {
+            return false;
+        }
         $insert = $this->processData($data);
         $insert['created_at'] = Carbon::now()->toDateTimeString();
-
     }
 
+    /**
+     * Save the file to the public path.
+     *
+     * @param $file
+     * @return bool|string
+     * @throws \WebPConvert\Convert\Exceptions\ConversionFailedException
+     */
+    private function saveFile($file)
+    {
+        //$this->resizeImages('https://i.imgur.com/xDWsY5u.jpg');
+
+        //Test
+
+        $file = File::get('http://cms.local/test.jpg');
+        dd($file);
+        $path = $this->checkDir();
+        $name = $file->getClientOriginalName();
+        $fullPath = $path . $name;
+
+        if (!$file->move($path, $name)) {
+            return false;
+        }
+
+        if (config('media.webp.convert')) {
+            $this->convertToWebP($fullPath);
+        }
+
+        if (getimagesize($fullPath)) {
+            $this->convertImages($fullPath);
+        }
+
+        return $path;
+    }
+
+    /**
+     * @param $path
+     * @return bool
+     */
+    private function resizeImages($path)
+    {
+        foreach ($this->imageSizes as $name => $size) {
+            $width = array_key_exists('width', $size) ? $size['width'] : null;
+            $height = array_key_exists('height', $size) ? $size['height'] : null;
+
+            try {
+                $this->imageHelper->make($path)->resize($width, $height)->save($path . '-' . $name);
+            } catch (\Exception $e) {
+                return false;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Deletes a media object from database
@@ -96,14 +151,26 @@ class Media {
         $paths = is_array($path) ? $path : func_get_args();
 
         foreach ($paths as $path) {
-            if (unlink($this->mediaPath($path))) {
+            if (unlink($path)) {
                 DB::table('media')->where('path', $path)->delete();
+
             } else {
                 return false;
             }
         }
 
         return true;
+    }
+
+    /**
+     * Gets the mime type of a file based on path.
+     *
+     * @param $path
+     * @return string
+     */
+    public function getMimeType($path)
+    {
+        return mime_content_type($path);
     }
 
     /**
@@ -120,12 +187,25 @@ class Media {
         $dir = $this->mediaPath . '/' . $year . '/' . $month;
 
         if (!file_exists($dir) && !is_dir($dir) ) {
-            mkdir($dir);
+            mkdir($dir, 0755, true);
         }
 
         return $dir;
     }
 
+    /**
+     * Converts an image to WebP format using WebPConvert
+     * and image options defined in media config.
+     *
+     * @param $source
+     * @param $destination
+     * @throws \WebPConvert\Convert\Exceptions\ConversionFailedException
+     */
+    private function convertToWebP($source, $destination = false)
+    {
+        $destination = $destination ? $destination : $source;
+        WebPConvert::convert($source, $destination, config('media.webp.options'));
+    }
 
     /**
      * Get the file size based on path.

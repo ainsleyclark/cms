@@ -11,7 +11,7 @@
 |
 */
 
-Media::get(2);
+Media::store();
 
 Route::get('/', function () {
     return view('yey');
