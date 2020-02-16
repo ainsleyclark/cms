@@ -38,6 +38,9 @@ class CoreCMSServiceProvider extends ServiceProvider
             dirname(__DIR__, 2) . '/Database/factories'
         ]);
 
+        $this->publishes([
+            dirname(__DIR__, 2) . '/Config/media.php' => config_path('media.php'),
+        ]);
 
     }
 

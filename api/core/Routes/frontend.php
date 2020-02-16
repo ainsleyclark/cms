@@ -11,6 +11,8 @@
 |
 */
 
+Media::get(2);
+
 Route::get('/', function () {
     return view('yey');
 });
@@ -18,8 +20,6 @@ Route::get('/', function () {
 Route::group(['namespace' => 'Core\Http\Controllers\Frontend'], function() {
 
     Route::get(Theme::getAssetsPath()[0] . '/{assets}', 'AssetsController@serveAssets')->where('assets', '.*');
-
-
 
 });
 

@@ -2,18 +2,13 @@
 
 namespace Core\Theme;
 
-use Core\Util\JSON;
+use Core\System\Util\JSON;
 use Core\Settings\Models\SettingsModel;
 use Core\Resource\Models\ResourceModel;
 use Core\Categories\Models\CategoriesModel;
 use Core\Theme\Exceptions\ThemeConfigException;
 use Core\Theme\Exceptions\ThemeNotFoundException;;
 
-/**
- * Class Theme
- *
- * @package Core\Theme
- */
 class Theme
 {
     /**

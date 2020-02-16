@@ -3,10 +3,11 @@
 namespace Core\Resource\Models;
 
 use Carbon\Carbon;
+use Core\Resource\Validation\ResourceValidation;
 use Core\Util\Slugify\Slugify;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-use Core\Resource\Validation\ResourceValidation;
+use Core\Resource\Validation\MediaValidation;
 use Core\Theme\Exceptions\ThemeConfigException;
 
 class ResourceModel
@@ -32,13 +33,13 @@ class ResourceModel
      * @param bool $resourceID
      * @return bool|object|null
      */
-    public function get($resourceID = false)
+    public function get($id = false)
     {
         $query = DB::table('resources')
             ->orderBy('menu_position', 'asc');
 
-        if ($resourceID) {
-            $resource = $query->where('id', $resourceID)->first();
+        if ($id) {
+            $resource = $query->where('id', $id)->first();
         } else {
             $resource = $query->get();
         }

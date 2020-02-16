@@ -166,9 +166,11 @@ return [
          * Package Service Providers...
          */
         Core\Theme\Providers\ThemeServiceProvider::class,
+        Core\Media\Providers\MediaServiceProvider::class,
         Core\System\Providers\RoutesServiceProvider::class,
         Core\System\Providers\CoreCMSServiceProvider::class,
         Core\System\Providers\ConsoleProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -232,6 +234,8 @@ return [
 
         //Custom
         'Theme' => Core\Support\Facades\Theme::class,
+        'Media' => Core\Support\Facades\Media::class,
+        'Image' => Intervention\Image\Facades\Image::class
 
     ],
 

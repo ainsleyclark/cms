@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Util;
+namespace Core\System\Util;
 
 /**
  * Class JSON
